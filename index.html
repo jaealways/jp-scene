@@ -193,7 +193,7 @@ const vidId=(location.hash||'').slice(1)||Object.keys(SCENES)[0];
 const S=SCENES[vidId]||SCENES[Object.keys(SCENES)[0]], L=S.L;
 const KEY='jpscene2.'+vidId, DAY=864e5, IV=[1,3,7,14,30];
 /* 기록 받는 주소(구글 Apps Script 웹 앱). 비어 있으면 기록을 폰에 모아 두었다가 주소가 생기면 한꺼번에 보냄 */
-const ENDPOINT='';
+const ENDPOINT='https://script.google.com/macros/s/AKfycbyExkEh-f8MVxlYVNqh_TGXxmmWKblC1PKfJp8IUs_fA4RrLO6Pl09x_meunSPFrL60/exec';
 let st={i:0,m:{},hide:{ko:false,ro:false,fu:false,ja:false},visits:0,taps:{},saved:{},due:{},str:{},ks:{},q:[]};
 try{const o=JSON.parse(localStorage.getItem(KEY)||'{}');st=Object.assign(st,o);st.hide=Object.assign({ko:false,ro:false,fu:false,ja:false},o.hide||{});st.str=st.str||{};st.ks=st.ks||{};st.q=st.q||[]}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
