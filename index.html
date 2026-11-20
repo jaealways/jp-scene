@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>한 장면 더</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style id="app-css">
+/* 하루 디자인 v4 토큰(정본: 디자인 시스템 「하루 디자인」) · 바깥 주소용 사본 */
+:root{color-scheme:dark;--bg:#17171C;--card:#222228;--band:#2A2A31;--line:#2E2E35;--ink:#EAEBEE;--ink2:#C3C8CE;--ink3:#9BA2AB;--accent:#4593FC;--accent-ink:#7CB2FF;--accent-soft:#132A42;--fill:#1B64DA;--pos:#1FC77E;--warn:#FFB020;--fs-1:26px;--fs-2:20px;--fs-3:18px;--fs-4:16px;--fs-5:15px;--r-card:20px;--r-face:16px;--r-chip:7px;--r-pill:999px;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg)}
+body{color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo",sans-serif;font-size:var(--fs-4);line-height:1.55;letter-spacing:-.01em;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.page{max-width:620px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-right)) 48px max(20px,env(safe-area-inset-left))}
+.vid{position:sticky;top:0;z-index:5;background:var(--bg);margin:0 calc(-1*max(20px,env(safe-area-inset-left)));padding-top:env(safe-area-inset-top)}
+.vid .box{position:relative;aspect-ratio:16/9;background:#000}
+.vid .box>*{position:absolute;inset:0;width:100%;height:100%}
+.hd{margin:var(--s4) 0 var(--s2)}
+.title{font-size:var(--fs-3);font-weight:700;margin:0}
+.asof{font-size:var(--fs-5);color:var(--ink3);margin:2px 0 0}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin:var(--s3) 0}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--band)}
+.dots i.ok{background:var(--pos)}.dots i.again{background:var(--warn)}
+.dots i.on{background:var(--accent);transform:scale(1.25)}
+.card{background:var(--card);border-radius:var(--r-card);padding:var(--s5)}
+.no{font-size:var(--fs-5);color:var(--ink3);display:flex;justify-content:space-between}
+.ja{font-size:var(--fs-1);font-weight:600;line-height:2;margin:var(--s2) 0 0;word-break:keep-all;overflow-wrap:anywhere}
+.ja ruby{ruby-align:center}.ja rt{font-size:var(--fs-5);font-weight:400;color:var(--ink3);letter-spacing:-.08em}
+.ro{font-size:var(--fs-4);color:var(--ink2);margin-top:var(--s1)}
+.ko{font-size:var(--fs-3);margin-top:var(--s2)}
+.mask{background:var(--accent-soft);color:transparent!important;border-radius:var(--r-chip)}
+.mask rt{color:transparent!important}
+.lvl{font-size:var(--fs-5);color:var(--ink3);margin-top:var(--s3)}
+.ctl{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:var(--s2);margin:var(--s3) 0}
+.btn{min-height:56px;border-radius:var(--r-face);background:var(--band);font-size:var(--fs-4);font-weight:600}
+.btn.pri{background:var(--fill);color:#fff}
+.btn:disabled{opacity:.4}
+.btn:active{transform:scale(.97)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-bottom:var(--s3)}
+.btn.sel-ok{background:#0B7A4E;color:#fff}.btn.sel-again{background:#5A4410;color:#fff}
+details{background:var(--card);border-radius:var(--r-card);padding:var(--s4) var(--s5)}
+summary{font-weight:600;cursor:pointer;min-height:24px}
+.ex .k{display:block;font-size:var(--fs-5);color:var(--ink3);margin:var(--s3) 0 var(--s1)}
+.ex p{margin:0}
+.ex rt{font-size:var(--fs-5);color:var(--ink3)}
+.top{display:flex;gap:var(--s2);margin:var(--s3) 0 0}
+.top .btn{flex:1;min-height:48px}
+.note{font-size:var(--fs-5);color:var(--ink3);margin:var(--s4) 0}
+.err{background:var(--card);border-radius:var(--r-card);padding:var(--s5);display:none}
+.err a{color:var(--accent-ink)}
+</style>
+</head>
+<body>
+<div class="vid"><div class="box"><div id="yt"></div></div></div>
+<div class="page">
+ <div class="hd">
+  <h1 class="title" id="vt"></h1>
+  <p class="asof" id="vs"></p>
+  <div class="top"><button class="btn" id="whole">장면 한 번 쭉 보기</button><button class="btn" id="redo">다시 볼 말만</button></div>
+ </div>
+ <div class="dots" id="dots"></div>
+ <div class="card" id="cur">
+  <div class="no"><span id="no"></span><span id="mark"></span></div>
+  <div class="ja" id="ja"></div>
+  <div class="ro" id="ro"></div>
+  <div class="ko" id="ko"></div>
+  <div class="lvl" id="lvl"></div>
+ </div>
+ <div class="ctl">
+  <button class="btn" id="prev">‹ 이전</button>
+  <button class="btn pri" id="play">⟲ 다시 듣기</button>
+  <button class="btn" id="next">다음 ›</button>
+ </div>
+ <div class="row2"><button class="btn" id="ok">입에 붙었어</button><button class="btn" id="again">다시 볼래</button></div>
+ <details id="exd"><summary>이 문장 뜯어보기</summary><div class="ex"><span class="k">낱말</span><p id="w"></p><span class="k">말의 틀</span><p id="pt"></p></div></details>
+ <div class="err" id="err">영상이 이 화면에서 안 열려요. <a id="errlink" href="#">유튜브에서 그 시각으로 보기</a></div>
+ <p class="note">⟲ 누를 때마다 그 문장만 나오고 멈춰요. 누를수록 글자가 줄어요: 1번째 다 보임 · 2번째 뜻 가림 · 3번째 로마자 가림 · 4번째 소리만. 가린 칸은 누르면 잠깐 보여요.</p>
+</div>
+<script>
+{
+const SCENES={
+"-yNBeZMK8iI":{t:"hannah · 21살, 서울 1주 혼자 여행",s:"공항 가는 날 아침 · 0:15~1:08 · 12문장",a:15,b:68,L:[
+[15.8,17.4,"おはようございます。","ohayou gozaimasu.","좋은 아침이에요.","おはようございます 아침 인사(공손)","영상 첫마디 인사. 친구끼리는 おはよう"],
+[17.5,20.9,"韓国(かんこく)のソウルのハンナムってところで、ポップアップがあるの。","kankoku no souru no hannamu tte tokoro de, poppu appu ga aru no.","한국 서울 한남이라는 곳에서 팝업이 있거든.","ってところ ~라는 곳 · ポップアップ 팝업","말끝 ~の: 사정을 풀어 말하는 반말"],
+[21.0,24.1,"そのイベントに行(い)くために、韓国(かんこく)に向(む)かいます。","sono ibento ni iku tame ni, kankoku ni mukaimasu.","그 이벤트에 가려고 한국으로 가요.","向(む)かう ~로 향하다","~ために: ~하려고(목적)"],
+[24.2,28.1,"今回(こんかい)は初(はじ)めて韓国(かんこく)のファンの方(かた)と会(あ)えるってことになって","konkai wa hajimete kankoku no fan no kata to aeru tte koto ni natte","이번엔 처음으로 한국 팬분들을 만날 수 있게 돼서","初(はじ)めて 처음 · 方(かた) 분 · 会(あ)える 만날 수 있다","~ことになって: ~하게 돼서(정해진 일)"],
+[28.2,30.6,"めちゃくちゃもう楽(たの)しみだった、ずっと。","mechakucha mou tanoshimi datta, zutto.","진짜 엄청 기대했어, 계속.","めちゃくちゃ 엄청 · ずっと 계속","~だった: 반말 과거. 말 순서를 뒤집어 ずっと를 끝에"],
+[30.7,33.0,"今日(きょう)から3日後(みっかご)ぐらいにイベントがあるから","kyou kara mikkago gurai ni ibento ga aru kara","오늘부터 3일 뒤쯤 이벤트가 있으니까","3日後(みっかご) 3일 뒤 · ぐらい ~쯤","~から: ~니까(이유)"],
+[33.1,35.3,"それまでの間(あいだ)、ちょっと観光(かんこう)しようかなと思(おも)ってる。","sore made no aida, chotto kankou shiyou ka na to omotteru.","그때까지는 좀 관광할까 해.","観光(かんこう) 관광 · ちょっと 좀","~しようかなと思ってる: ~할까 생각 중"],
+[35.4,41.9,"今日(きょう)は多分(たぶん)機内食(きないしょく)が出(で)るから、ここでご飯(はん)をあんまり食(た)べないようにしようと思(おも)ってたんだけど","kyou wa tabun kinaishoku ga deru kara, koko de gohan o anmari tabenai you ni shiyou to omotteta n da kedo","오늘은 아마 기내식이 나오니까 여기서 밥을 많이 안 먹으려고 했는데","多分(たぶん) 아마 · 機内食(きないしょく) 기내식 · あんまり 별로","~ないようにしよう: ~안 하도록 하자"],
+[47.6,49.4,"おにぎり1個(いっこ)だけ買(か)おうと思(おも)ったの。","onigiri ikko dake kaou to omotta no.","주먹밥 하나만 사려고 했거든.","1個(いっこ) 한 개 · だけ ~만","~ようと思った: ~하려고 했다"],
+[50.0,52.0,"だけどお菓子(かし)を2個(にこ)買(か)いました。","dakedo okashi o niko kaimashita.","그런데 과자를 두 개 샀어요.","お菓子(かし) 과자 · だけど 그런데","~ました: 공손한 과거"],
+[52.1,53.4,"本当(ほんとう)に悔(くや)しい。","hontou ni kuyashii.","진짜 분해.","悔(くや)しい 분하다·속상하다","감정 한 마디. 本当に로 세게"],
+[64.9,67.6,"飛行機(ひこうき)に乗(の)る前(まえ)の、この時間(じかん)大好(だいす)きなの。","hikouki ni noru mae no, kono jikan daisuki na no.","비행기 타기 전의 이 시간이 너무 좋아.","乗(の)る 타다 · 前(まえ) 전","~前の: ~하기 전의"]
+]}};
+const RX=/([0-9一-龯々]+)\(([ぁ-んー]+)\)/g;
+const ruby=s=>s.replace(RX,'<ruby>$1<rt>$2</rt></ruby>');
+const vidId=(location.hash||'').slice(1)||Object.keys(SCENES)[0];
+const S=SCENES[vidId]||SCENES[Object.keys(SCENES)[0]];
+const L=S.L, $=id=>document.getElementById(id);
+const KEY='jpscene.'+vidId;
+let st={i:0,m:{}};try{st=Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+let plays=0, order=null, endAt=null, player=null, ready=false;
+$('vt').textContent=S.t; $('vs').textContent=S.s;
+const LV=['','다 보임','뜻 가림','로마자 가림','소리만'];
+function render(){
+ const l=L[st.i], lv=Math.min(Math.max(plays,1),4);
+ $('no').textContent=(st.i+1)+' / '+L.length;
+ $('mark').textContent=st.m[st.i]==='ok'?'입에 붙음':st.m[st.i]==='again'?'다시 볼 말':'';
+ $('ja').innerHTML=ruby(l[2]); $('ro').textContent=l[3]; $('ko').textContent=l[4];
+ $('ko').classList.toggle('mask',lv>=2); $('ro').classList.toggle('mask',lv>=3); $('ja').classList.toggle('mask',lv>=4);
+ $('lvl').textContent=plays?('들은 횟수 '+plays+' · '+LV[lv]):'⟲ 눌러서 영상 소리로 듣기';
+ $('w').innerHTML=ruby(l[5]); $('pt').textContent=l[6];
+ $('dots').innerHTML=L.map((_,k)=>`<i class="${k===st.i?'on':''} ${st.m[k]||''}"></i>`).join('');
+ $('prev').disabled=st.i===0; $('next').disabled=st.i===L.length-1;
+ $('ok').classList.toggle('sel-ok',st.m[st.i]==='ok'); $('again').classList.toggle('sel-again',st.m[st.i]==='again');
+ $('errlink').href=`https://www.youtube.com/watch?v=${vidId}&t=${Math.floor(l[0])}s`;
+}
+function seg(a,b){ if(!ready)return; endAt=b; player.seekTo(a,true); player.playVideo(); }
+function go(k){ st.i=Math.max(0,Math.min(L.length-1,k)); plays=0; save(); $('exd').open=false; render(); }
+$('play').onclick=()=>{ const l=L[st.i]; plays++; render(); seg(Math.max(0,l[0]-0.15),l[1]+0.25); };
+$('prev').onclick=()=>go(st.i-1);
+$('next').onclick=()=>go(st.i+1);
+$('whole').onclick=()=>{ plays=0; render(); seg(S.a,S.b); };
+$('redo').onclick=()=>{ const r=L.map((_,k)=>k).filter(k=>st.m[k]==='again'); if(!r.length){$('redo').textContent='다시 볼 말 없음';setTimeout(()=>$('redo').textContent='다시 볼 말만',1500);return} const nx=r.find(k=>k>st.i); go(nx!==undefined?nx:r[0]); };
+$('ok').onclick=()=>{ st.m[st.i]='ok'; save(); render(); };
+$('again').onclick=()=>{ st.m[st.i]='again'; save(); render(); };
+document.addEventListener('click',e=>{ const m=e.target.closest('.mask'); if(!m)return; m.classList.remove('mask'); setTimeout(render,2500); });
+let x0=null; $('cur').addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+$('cur').addEventListener('touchend',e=>{ if(x0===null)return; const dx=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(dx)>60) go(st.i+(dx<0?1:-1)); });
+setInterval(()=>{ if(ready&&endAt!==null&&player.getCurrentTime&&player.getCurrentTime()>=endAt){ player.pauseVideo(); endAt=null; } },80);
+window.onYouTubeIframeAPIReady=()=>{ player=new YT.Player('yt',{videoId:vidId,playerVars:{playsinline:1,rel:0,modestbranding:1,start:S.a,cc_load_policy:0},events:{onReady:()=>{ready=true;window.__ready=true},onError:()=>{$('err').style.display='block'}}}); };
+const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.appendChild(s);
+render();
+window.__scene={L,st,get plays(){return plays},get endAt(){return endAt},get player(){return player}};
+}
+</script>
+</body>
+</html>
