@@ -7,7 +7,7 @@
 <title>한 장면 더</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style id="app-css">
-/* 하루 디자인 v4 토큰 사본(정본: 디자인 시스템 「하루 디자인」) · 2판 2026-11-20 */
+/* 하루 디자인 v4 토큰 사본(정본: 디자인 시스템 「하루 디자인」) · 3판 2026-11-20 커리큘럼 신호 */
 :root{color-scheme:dark;--bg:#17171C;--card:#222228;--band:#2A2A31;--line:#2E2E35;--ink:#EAEBEE;--ink2:#C3C8CE;--ink3:#9BA2AB;--accent:#4593FC;--accent-ink:#7CB2FF;--accent-soft:#132A42;--fill:#1B64DA;--pos:#1FC77E;--pos-soft:#0F2B21;--warn:#FFB020;--fs-0:40px;--fs-1:26px;--fs-2:20px;--fs-3:18px;--fs-4:16px;--fs-5:15px;--r-card:20px;--r-face:16px;--r-chip:7px;--r-pill:999px;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg)}
@@ -96,6 +96,7 @@ summary{font-weight:600;cursor:pointer;min-height:24px}
    <p class="step-h">처음엔 그냥 봐요</p>
    <p class="big">장면을 한 번 쭉 보고 문장으로 들어가요</p>
    <p class="sub" id="dueNote" hidden></p>
+   <div id="warmBox" hidden><div class="gap"></div><button class="btn wide" id="warm">⟲ 지난번 그 말 먼저 듣기 · 30초</button><div class="ja" id="warmJa" style="font-size:var(--fs-2)"></div></div>
    <div class="gap"></div>
    <button class="btn pri wide" id="whole">▶ 장면 한 번 쭉 보기</button>
    <div class="gap"></div>
@@ -191,10 +192,21 @@ function lineHtml(s){
 const vidId=(location.hash||'').slice(1)||Object.keys(SCENES)[0];
 const S=SCENES[vidId]||SCENES[Object.keys(SCENES)[0]], L=S.L;
 const KEY='jpscene2.'+vidId, DAY=864e5, IV=[1,3,7,14,30];
-let st={i:0,m:{},hide:{ko:false,ro:false,fu:false,ja:false},visits:0,taps:{},saved:{},due:{}};
-try{const o=JSON.parse(localStorage.getItem(KEY)||'{}');st=Object.assign(st,o);st.hide=Object.assign({ko:false,ro:false,fu:false,ja:false},o.hide||{})}catch(e){}
+/* 기록 받는 주소(구글 Apps Script 웹 앱). 비어 있으면 기록을 폰에 모아 두었다가 주소가 생기면 한꺼번에 보냄 */
+const ENDPOINT='';
+let st={i:0,m:{},hide:{ko:false,ro:false,fu:false,ja:false},visits:0,taps:{},saved:{},due:{},str:{},ks:{},q:[]};
+try{const o=JSON.parse(localStorage.getItem(KEY)||'{}');st=Object.assign(st,o);st.hide=Object.assign({ko:false,ro:false,fu:false,ja:false},o.hide||{});st.str=st.str||{};st.ks=st.ks||{};st.q=st.q||[]}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
-st.visits++; if(st.visits>=2)st.hide.ro=true; st.hide.ja=false; save();
+/* 커리큘럼 신호: 화면엔 안 보이고 기록으로만 감 */
+function logEv(kind,line,key,val,extra){st.q.push({at:new Date().toISOString(),vid:vidId,line:line,kind:kind,key:key||'',val:val===undefined?'':val,extra:extra||''});if(st.q.length>400)st.q=st.q.slice(-400);save()}
+let flushing=false;
+function flush(){if(!ENDPOINT||!st.q.length||flushing)return;flushing=true;const ev=st.q.slice(0,200);
+ fetch(ENDPOINT,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({ev})})
+ .then(()=>{st.q=st.q.slice(ev.length);save()}).catch(()=>{}).finally(()=>{flushing=false})}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});
+const strOf=i=>st.str[i]||0;
+function bump(i,d){st.str[i]=Math.max(0,Math.min(4,strOf(i)+d))}
+st.visits++; st.hide.ja=false; logEv('visit',-1,'visits',st.visits); save();
 $('vt').textContent=S.t; $('vs').textContent=S.s;
 
 /* 플레이어 */
@@ -215,9 +227,13 @@ function show(p){['intro','lines','end'].forEach(x=>$('p-'+x).hidden=x!==p);wind
 const now=Date.now();
 const dueLines=[...new Set(Object.entries(st.due).filter(([k,v])=>v<=now).map(([k])=>+k))].sort((a,b)=>a-b);
 if(dueLines.length){$('dueNote').hidden=false;$('dueNote').textContent=`담아 둔 말이 든 문장 ${dueLines.length}개부터 시작해요`;st.i=dueLines[0]}
+/* 지난번 약했던 말 2개 먼저(원래 영상 소리) */
+const weak=Object.keys(st.seen||{}).map(Number).filter(i=>strOf(i)<=1).sort((a,b)=>strOf(a)-strOf(b)||a-b).slice(0,2);
+if(st.visits>=2&&weak.length){$('warmBox').hidden=false}
+$('warm').onclick=async()=>{for(const i of weak){const l=L[i];$('warmJa').innerHTML=rubyHtml(l[2])+`<div class="ko" style="font-size:var(--fs-4)">${l[4]}</div>`;await new Promise(r=>seg(Math.max(0,l[0]-0.15),l[1]+0.25,r));await sleep(1500)}$('warmJa').innerHTML='';$('warmBox').hidden=true;logEv('warm',-1,'lines',weak.join(' '))};
 $('whole').onclick=()=>{if(endAt!==null){stopSeg();toLines();return}$('whole').textContent='보는 중 · 누르면 건너뛰기';setCover(false);seg(S.a,S.b,toLines)};
 $('skip').onclick=()=>{stopSeg();toLines()};
-function toLines(){$('whole').textContent='▶ 장면 한 번 쭉 보기';show('lines');plays=0;render()}
+function toLines(){$('whole').textContent='▶ 장면 한 번 쭉 보기';show('lines');plays=0;autoHide();save();render()}
 
 /* 2 문장 */
 let plays=0,auto=false,autoTok=0,preTimer=null;
@@ -250,9 +266,14 @@ $('play').onclick=()=>{stopAuto();clearTimeout(preTimer);
  if(plays===0&&st.hide.ro&&!st.hide.ja){let n=3;$('pre').textContent=`속으로 먼저 읽어 봐요 · ${n}`;
   const tick=()=>{n--;if(n>0){$('pre').textContent=`속으로 먼저 읽어 봐요 · ${n}`;preTimer=setTimeout(tick,1000)}else{$('pre').textContent='';plays++;playLine()}};preTimer=setTimeout(tick,1000);return}
  plays++;playLine()};
-function go(k){stopSeg();clearTimeout(preTimer);
+let lineTaps=0;
+function leaveLine(){const i=st.i;if(!plays&&!lineTaps)return;const lv=ORDER.filter(x=>st.hide[x]).length;
+ if(!auto){if(plays>=4||(lineTaps>=2&&lv<2))bump(i,-1);else if(lv>=2&&plays<=2)bump(i,1);}
+ st.seen=Object.assign({},st.seen,{[i]:1});logEv('line',i,'plays',plays,`hide=${lv};taps=${lineTaps};str=${strOf(i)}`);lineTaps=0}
+function autoHide(){const s=strOf(st.i);st.hide={ko:s>=2,ro:st.visits>=2||s>=3,fu:s>=4,ja:false}}
+function go(k){stopSeg();clearTimeout(preTimer);leaveLine();flush();
  if(k>=L.length){toEnd();return}
- st.i=Math.max(0,k);plays=0;
+ st.i=Math.max(0,k);plays=0;autoHide();
  if(st.due[st.i]&&st.due[st.i]<=Date.now()){const b=(st.dueBox||{})[st.i]||0;st.dueBox=Object.assign({},st.dueBox,{[st.i]:b+1});st.due[st.i]=Date.now()+IV[Math.min(b+1,4)]*DAY}
  save();$('exd').open=false;render()}
 $('prev').onclick=()=>{stopAuto();go(st.i-1)};
@@ -260,10 +281,10 @@ $('next').onclick=()=>{stopAuto();go(st.i+1)};
 $('chips').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;st.hide[c.dataset.h]=!st.hide[c.dataset.h];save();applyHide()};
 $('less').onclick=()=>{const k=ORDER.find(k=>!st.hide[k]);if(k){st.hide[k]=true;save();applyHide()}};
 $('more').onclick=()=>{const k=[...ORDER].reverse().find(k=>st.hide[k]);if(k){st.hide[k]=false;save();applyHide()}};
-$('ok').onclick=()=>{st.m[st.i]='ok';delete st.due[st.i];save();render()};
-$('again').onclick=()=>{st.m[st.i]='again';st.due[st.i]=Date.now()+DAY;save();render()};
+$('ok').onclick=()=>{st.m[st.i]='ok';delete st.due[st.i];bump(st.i,1);logEv('mark',st.i,'ok',strOf(st.i));save();render()};
+$('again').onclick=()=>{st.m[st.i]='again';st.due[st.i]=Date.now()+DAY;st.str[st.i]=0;logEv('mark',st.i,'again',0);save();render()};
 $('w').onclick=e=>{const b=e.target.closest('[data-wd]');if(!b)return;const w=b.dataset.wd;
- if(st.saved[w]){delete st.saved[w]}else{st.saved[w]={line:st.i,at:Date.now()};if(!st.due[st.i])st.due[st.i]=Date.now()+DAY}save();render();$('exd').open=true};
+ if(st.saved[w]){delete st.saved[w];logEv('word',st.i,w,0)}else{st.saved[w]={line:st.i,at:Date.now()};if(!st.due[st.i])st.due[st.i]=Date.now()+DAY;logEv('word',st.i,w,1)}save();render();$('exd').open=true};
 /* 가린 칸 잠깐 보기 */
 document.addEventListener('click',e=>{const m=e.target.closest('.mask');if(m){m.classList.remove('mask');setTimeout(applyHide,2500);return}
  if(e.target.closest('#ja.hide')){$('ja').classList.remove('hide');setTimeout(applyHide,2500);return}});
@@ -271,7 +292,7 @@ document.addEventListener('click',e=>{const m=e.target.closest('.mask');if(m){m.
 let tipEl=null;
 $('ja').addEventListener('click',e=>{if(!st.hide.ro||st.hide.ja)return;const kt=e.target.closest('.kt');const u=e.target.closest('.k');if(!u&&!kt)return;
  const target=kt||u;const r=target.dataset.r||u.dataset.r;const key=kt?kt.textContent:(u.firstChild.nodeValue||u.textContent);
- [...key].filter(c=>/[ぁ-ゖァ-ヶ]/.test(c)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッ'.includes(c)).forEach(c=>{st.taps[c]=(st.taps[c]||0)+1});save();
+ lineTaps++;[...key].filter(c=>/[ぁ-ゖァ-ヶ]/.test(c)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッ'.includes(c)).forEach(c=>{st.taps[c]=(st.taps[c]||0)+1;st.ks[c]=(st.ks[c]||0)-1});logEv('kana',st.i,key,r);save();
  const rc=target.getBoundingClientRect();if(tipEl)tipEl.remove();tipEl=document.createElement('div');tipEl.className='tip';tipEl.textContent=r;tipEl.style.left=(rc.left+rc.width/2)+'px';tipEl.style.top=rc.top+'px';document.body.appendChild(tipEl);const me=tipEl;setTimeout(()=>me.remove(),1400)});
 /* 카드 밀기 */
 let x0=null;$('cur').addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
@@ -281,7 +302,8 @@ function stopAuto(){if(!auto)return;auto=false;autoTok++;$('auto').classList.rem
 const playP=()=>new Promise(r=>{playLine(r)});
 async function runAuto(tok){
  while(auto&&tok===autoTok){
-  for(let rep=0;rep<2;rep++){if(tok!==autoTok)return;plays++;$('pre').textContent=`지하철 자동 · ${rep===0?'듣기':'한 번 더'}`;await playP();if(tok!==autoTok)return;$('pre').textContent='지하철 자동 · 속으로 따라 하기 3초';await sleep(3000)}
+  const s=strOf(st.i),reps=s<=1?3:s===2?2:1;
+  for(let rep=0;rep<reps;rep++){if(tok!==autoTok)return;plays++;$('pre').textContent=`지하철 자동 · ${rep===0?'듣기':'한 번 더'} ${rep+1}/${reps}`;await playP();if(tok!==autoTok)return;$('pre').textContent='지하철 자동 · 속으로 따라 하기 3초';await sleep(3000)}
   if(tok!==autoTok)return;
   if(st.i>=L.length-1){stopAuto();toEnd();return}
   go(st.i+1)}
@@ -291,18 +313,22 @@ $('auto').onclick=()=>{if(auto){stopAuto();stopSeg();return}auto=true;autoTok++;
 /* 3 장면 끝: 글자 3개 → 떠올리기 → 자막 없이 쭉 → 끝 */
 let endQ=[],eStep=0,eIdx=0;
 function sceneKana(){const c={};L.forEach(l=>{[...plain(l[2])].forEach(ch=>{if(/[ぁ-ゖァ-ヶ]/.test(ch)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッをん'.includes(ch))c[ch]=(c[ch]||0)+1})});return c}
-function pickKana(){const tapped=Object.entries(st.taps).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);const all=Object.keys(sceneKana());const out=[...new Set(tapped)].slice(0,3);for(const k of all.sort(()=>Math.random()-.5)){if(out.length>=3)break;if(!out.includes(k))out.push(k)}return {out,all,fromTap:tapped.length>0}}
-function toEnd(){stopSeg();setCover(false);const p=pickKana();endQ=p.out;window.__kpool=p.all;eStep=0;eIdx=0;show('end');renderEnd()}
+function pickKana(){const tapped=Object.entries(st.ks).filter(x=>x[1]<0).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);const all=Object.keys(sceneKana());const out=[...new Set(tapped)].slice(0,3);for(const k of all.sort(()=>Math.random()-.5)){if(out.length>=3)break;if(!out.includes(k))out.push(k)}return {out,all,fromTap:tapped.length>0}}
+function toEnd(){stopSeg();setCover(false);logEv("end",-1,"ok",L.filter((_,k)=>st.m[k]==="ok").length);flush();const p=pickKana();endQ=p.out;window.__kpool=p.all;eStep=0;eIdx=0;show('end');renderEnd()}
 function renderEnd(){const c=$('endCard');
  if(eStep===0){const k=endQ[eIdx];const right=romUnit(k);const pool=[...new Set(window.__kpool.map(romUnit))].filter(r=>r!==right).sort(()=>Math.random()-.5).slice(0,3);const opts=[right,...pool].sort(()=>Math.random()-.5);
   c.innerHTML=`<p class="step-h">마무리 1 · 오늘의 글자 ${eIdx+1} / ${endQ.length}</p><p class="big">이 글자, 어떻게 읽어요?</p><div class="kana">${k}</div><div class="opts">${opts.map(o=>`<button class="btn" data-o="${o}">${o}</button>`).join('')}</div><div class="gap"></div><button class="btn wide" id="eNext" hidden>다음 ›</button>`;
-  c.querySelector('.opts').onclick=e=>{const b=e.target.closest('[data-o]');if(!b)return;c.querySelectorAll('[data-o]').forEach(x=>{x.classList.add(x.dataset.o===right?'right':'wrong');x.disabled=true});$('eNext').hidden=false};
+  c.querySelector('.opts').onclick=e=>{const b=e.target.closest('[data-o]');if(!b)return;const okk=b.dataset.o===right;st.ks[k]=okk?Math.min(2,(st.ks[k]||0)+1):Math.min(-1,(st.ks[k]||0)-1);logEv('quiz',-1,k,okk?1:0,b.dataset.o);save();c.querySelectorAll('[data-o]').forEach(x=>{x.classList.add(x.dataset.o===right?'right':'wrong');x.disabled=true});$('eNext').hidden=false};
   $('eNext').onclick=()=>{eIdx++;if(eIdx>=endQ.length){eStep=1;eIdx=0}renderEnd()};return}
  if(eStep===1){const ag=L.map((_,k)=>k).filter(k=>st.m[k]==='again');if(!ag.length){eStep=2;renderEnd();return}
   const k=ag[eIdx];const l=L[k];
-  c.innerHTML=`<p class="step-h">마무리 2 · 다시 볼 말 떠올리기 ${eIdx+1} / ${ag.length}</p><p class="big">${l[4]}</p><p class="sub">이 뜻을 일본어로 속으로 말해 봐요</p><div class="ja" id="eja" style="visibility:hidden">${rubyHtml(l[2])}</div><div class="gap"></div><button class="btn pri wide" id="eChk">원래 목소리로 맞춰 보기</button><div class="gap"></div><button class="btn wide" id="eNext">다음 ›</button>`;
-  $('eChk').onclick=()=>{$('eja').style.visibility='visible';seg(Math.max(0,l[0]-0.15),l[1]+0.25)};
-  $('eNext').onclick=()=>{stopSeg();eIdx++;if(eIdx>=ag.length){eStep=2;eIdx=0}renderEnd()};return}
+  c.innerHTML=`<p class="step-h">마무리 2 · 다시 볼 말 떠올리기 ${eIdx+1} / ${ag.length}</p><p class="big">${l[4]}</p><p class="sub">이 뜻을 일본어로 속으로 말해 봐요</p><div class="ja" id="eja" style="visibility:hidden">${rubyHtml(l[2])}</div><div class="gap"></div><button class="btn pri wide" id="eChk">원래 목소리로 맞춰 보기</button><div class="opts" id="eGrade" style="grid-template-columns:1fr 1fr 1fr;margin-top:var(--s3)" hidden><button class="btn" data-g="2">바로</button><button class="btn" data-g="1">겨우</button><button class="btn" data-g="0">안 떠올랐어</button></div>`;
+  $('eChk').onclick=()=>{$('eja').style.visibility='visible';$('eGrade').hidden=false;seg(Math.max(0,l[0]-0.15),l[1]+0.25)};
+  $('eGrade').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;const g=+b.dataset.g;
+   if(g===2){bump(k,1);const bx=Math.min(4,((st.dueBox||{})[k]||0)+1);st.dueBox=Object.assign({},st.dueBox,{[k]:bx});st.due[k]=Date.now()+IV[bx]*DAY}
+   else if(g===1){st.due[k]=Date.now()+DAY}
+   else{st.str[k]=0;st.dueBox=Object.assign({},st.dueBox,{[k]:0});st.due[k]=Date.now()+DAY}
+   logEv('recall',k,'grade',g);save();stopSeg();eIdx++;if(eIdx>=ag.length){eStep=2;eIdx=0}renderEnd()};return}
  if(eStep===2){c.innerHTML=`<p class="step-h">마무리 3 · 자막 없이</p><p class="big">이제 장면을 자막 없이 다시 쭉 봐요</p><p class="sub">처음보다 들리는 말이 늘었는지 느껴 봐요</p><div class="gap"></div><button class="btn pri wide" id="eWhole">▶ 자막 없이 쭉 보기</button><div class="gap"></div><button class="btn wide" id="eNext">건너뛰기 ›</button>`;
   $('eWhole').onclick=()=>{setCover(true);$('eWhole').textContent='보는 중';seg(S.a,S.b,()=>{setCover(false);eStep=3;renderEnd()})};
   $('eNext').onclick=()=>{stopSeg();setCover(false);eStep=3;renderEnd()};return}
