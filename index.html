@@ -671,7 +671,7 @@ function sceneState(id){let o={};try{o=JSON.parse(localStorage.getItem('jpscene2
 function chipOf(x){return x.due?`<span class="lchip due">다시 볼 말 ${x.due}</span>`:!x.started?`<span class="lchip go">새 장면</span>`:x.ok>=x.n?`<span class="lchip ok">입에 붙음</span>`:`<span class="lchip">${x.ok}/${x.n}</span>`}
 function renderList(){document.body.classList.add('list');['p-intro','p-lines','p-end'].forEach(x=>{const e=document.getElementById(x);if(e)e.hidden=true});
  const ids=Object.keys(SCENES);const all=ids.map((id,i)=>({id,i,v:vOf(id),...sceneState(id)}));const P=document.getElementById('p-list');
- if(VLIST){const mine=all.filter(x=>x.v===VLIST);const S0=SCENES[mine[0].id];
+ if(VLIST){const mine=all.filter(x=>x.v===VLIST);if(!mine.length){document.getElementById('vt').textContent='장면 준비 중';document.getElementById('vs').textContent='이 영상 장면은 일요일에 만들어져요';P.innerHTML='<div class="card"><p class="big">아직 장면이 없어요</p><p class="sub">‹ 영상 고르기에서 다른 영상을 골라 봐요</p></div>';P.hidden=false;return}const S0=SCENES[mine[0].id];
   document.getElementById('vt').textContent=S0.t;document.getElementById('vs').textContent=`장면 ${mine.length}개 · 20~30초씩 · 쉬운 말 위주`;
   P.innerHTML=mine.map((x,k)=>`<button class="lrow" data-id="${x.id}"><span class="tx"><b>장면 ${k+1} · ${SCENES[x.id].s.split(' · ')[0]}</b><em>${SCENES[x.id].s.split(' · ').slice(1).join(' · ')}</em></span>${chipOf(x)}</button>`).join('');
   P.hidden=false;P.onclick=e=>{const b=e.target.closest('[data-id]');if(b)location.hash=b.dataset.id};return}
