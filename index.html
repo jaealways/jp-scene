@@ -59,6 +59,15 @@ body.list .box{display:none}
 .ja{font-size:var(--fs-1);font-weight:600;line-height:2.1;margin:var(--s2) 0 0;word-break:keep-all;overflow-wrap:anywhere}
 .ja ruby{ruby-align:center}.ja rt{font-size:var(--fs-5);font-weight:400;color:var(--ink3);letter-spacing:-.08em}
 .ja.nofu rt{visibility:hidden}
+.ja rt{font-size:var(--fs-5)}
+.ja .s-known rt{display:none}
+.ja .s-target{color:var(--warn)}
+.ja .s-target rt{color:var(--warn);font-weight:600}
+.ja .s-later rt{color:var(--ink3)}
+.orig{font-size:var(--fs-4);color:var(--ink3);margin-top:var(--s1);line-height:1.9}
+.orig rt{font-size:12px}
+.wk{font-size:var(--fs-5);color:var(--ink2);margin:0 0 var(--s2)}
+.wk b{color:var(--warn);letter-spacing:.15em}
 .ja .u{transition:color .12s;border-radius:4px}
 .ja .u.lit{color:var(--accent-ink)}
 .ja .kt{box-shadow:inset 0 -2px 0 var(--warn)}
@@ -117,15 +126,17 @@ summary{font-weight:600;cursor:pointer;min-height:24px}
 
  <!-- 2 문장 -->
  <section id="p-lines" hidden>
+  <p class="wk" id="wk"></p>
   <div class="bar"><div class="dots" id="dots"></div><button class="auto" id="auto" aria-pressed="false"><span class="sw"></span>지하철 자동</button></div>
   <div class="chips" id="chips">
    <button class="chip" data-h="ko">뜻</button>
    <button class="chip" data-h="ro">로마자</button>
-   <button class="chip" data-h="fu">요미가나</button>
+   <button class="chip" data-h="fu">한자</button>
   </div>
   <div class="card" id="cur">
    <div class="no"><span id="no"></span><span id="mark"></span></div>
    <div class="ja" id="ja"></div>
+   <div class="orig" id="orig"></div>
    <div class="ro" id="ro"></div>
    <div class="ko" id="ko"></div>
    <div class="pre" id="pre"></div>
@@ -151,19 +162,127 @@ summary{font-weight:600;cursor:pointer;min-height:24px}
 <script>
 {
 const SCENES={
-"89_kQ8hv5U4":{t:"hannah · 21살, 첫 뉴욕 혼자 여행",s:"하네다 공항에서 비자 소동 · 0:17~0:52 · 12문장",a:17,b:52,L:[
-[18.4, 21.8, "今日(きょう)からニューヨークに1週間(いっしゅうかん)行(い)くの。", "kyou kara nyuuyooku ni isshuukan iku no.", "오늘부터 뉴욕에 일주일 가.", [["1週間(いっしゅうかん)", "일주일"], ["行(い)く", "가다"]], "~の: 사정을 말하는 반말 끝"],
-[21.9, 23.2, "もう、夢(ゆめ)じゃない？", "mou, yume ja nai?", "이거 완전 꿈 아니야?", [["夢(ゆめ)", "꿈"]], "~じゃない？: ~아니야?(동의 구하기)"],
-[23.3, 26.6, "ニューヨークって、響(ひび)きがもうね、すでにワクワクするんだけど。", "nyuuyooku tte, hibiki ga mou ne, sude ni wakuwaku suru n da kedo.", "뉴욕이라는 말 울림부터 벌써 설레는데.", [["響(ひび)き", "울림"], ["すでに", "벌써"], ["ワクワク", "두근두근"]], "~って: ~라는 건(화제)"],
-[26.7, 28.3, "今(いま)、羽田空港(はねだくうこう)にいて", "ima, haneda kuukou ni ite", "지금 하네다 공항에 있고", [["空港(くうこう)", "공항"], ["いて", "있고"]], "~にいて: ~에 있고(이어 말하기)"],
-[28.4, 30.6, "あと1時間半(いちじかんはん)ぐらい待機(たいき)するんだけど", "ato ichijikan han gurai taiki suru n da kedo", "앞으로 1시간 반쯤 기다리는데", [["あと", "앞으로 ~더"], ["待機(たいき)", "대기"]], "あと+시간: 앞으로 ~남음"],
-[30.7, 33.3, "今日(きょう)、朝(あさ)の5時半(ごじはん)ぐらいに起(お)きて", "kyou, asa no goji han gurai ni okite", "오늘 아침 5시 반쯤 일어나서", [["5時半(ごじはん)", "5시 반"], ["起(お)きる", "일어나다"]], "~て: ~하고/~해서(순서)"],
-[33.4, 36.5, "10時半(じゅうじはん)のフライトに向(む)けて、早(はや)めに来(き)てみたんだけど", "juuji han no furaito ni mukete, hayame ni kite mita n da kedo", "10시 반 비행기에 맞춰 일찍 와 봤는데", [["フライト", "비행편"], ["早(はや)めに", "일찍"]], "~てみた: ~해 봤다"],
-[36.6, 38.0, "入(い)り口(ぐち)で止(と)められて", "iriguchi de tomerarete", "입구에서 막혀서", [["入(い)り口(ぐち)", "입구"], ["止(と)められる", "저지당하다"]], "~られて: ~당해서(수동)"],
-[38.1, 40.2, "「アメリカのビザありますか？」って言(い)われたの。", "\"amerika no biza arimasu ka?\" tte iwareta no.", "\"미국 비자 있어요?\"라고 들었어.", [["ビザ", "비자"], ["言(い)われた", "말을 들었다"]], "~って言われた: ~라고 들었다"],
-[40.3, 41.5, "で、私(わたし)持(も)ってなくて", "de, watashi motte nakute", "근데 나 안 갖고 있어서", [["持(も)ってない", "안 갖고 있다"]], "~なくて: ~안 해서"],
-[46.9, 50.0, "1時間(いちじかん)ぐらい空港内(くうこうない)を彷徨(さまよ)ってたんだけど", "ichijikan gurai kuukounai o samayotte ta n da kedo", "1시간쯤 공항 안을 헤맸는데", [["空港内(くうこうない)", "공항 안"], ["彷徨(さまよ)う", "헤매다"]], "~てたんだけど: ~하고 있었는데"],
-[50.1, 51.4, "無事(ぶじ)に入(はい)れました。", "buji ni hairemashita.", "무사히 들어갔어요.", [["無事(ぶじ)に", "무사히"], ["入(はい)れる", "들어갈 수 있다"]], "~れました: ~할 수 있었어요"]
+"89_kQ8hv5U4~01":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"공항에서 · 0:17~0:48 · 6문장",a:17,b:48,L:[
+[21.9, 23.3, "もう、夢(ゆめ)じゃない？", "mou, yume ja nai?", "이거 꿈 아니야?", [["夢(ゆめ)", "꿈"]], "~じゃない？: ~아니야?"],
+[26.7, 28.4, "今(いま)、羽田空港(はねだくうこう)にいて", "ima, haneda kuukou ni ite", "지금 하네다 공항에 있고", [["空港(くうこう)", "공항"]], "~にいて: ~에 있고"],
+[30.7, 33.4, "今日(きょう)、朝(あさ)の5時半(ごじはん)ぐらいに起(お)きて", "kyou, asa no goji han gurai ni okite", "오늘 아침 5시 반쯤 일어나서", [["朝(あさ)", "아침"], ["起(お)きる", "일어나다"]], "~ぐらい: ~쯤"],
+[35.2, 36.5, "早(はや)めに来(き)てみたんだけど", "hayame ni kite mita n da kedo", "일찍 와 봤는데", [["早(はや)めに", "일찍"]], "~てみた: ~해 봤다"],
+[36.6, 38.1, "入(い)り口(ぐち)で止(と)められて", "iriguchi de tomerarete", "입구에서 막혀서", [["入(い)り口(ぐち)", "입구"]], "~られて: ~당해서"],
+[40.3, 41.5, "で、私(わたし)持(も)ってなくて", "de, watashi motte nakute", "근데 나 안 갖고 있어서", [["持(も)ってない", "안 갖고 있다"]], "~なくて: ~안 해서"]
+]},
+"89_kQ8hv5U4~02":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"비행기에서 본 것 · 3:32~4:03 · 6문장",a:212,b:243,L:[
+[213.0, 214.0, "もうすぐ着(つ)いちゃう", "mou sugu tsuichau", "곧 도착해 버려", [["もうすぐ", "곧"], ["着(つ)く", "도착하다"]], "~ちゃう: ~해 버리다"],
+[214.1, 215.8, "だから13時間(じゅうさんじかん)は早(はや)かった", "dakara juusan jikan wa hayakatta", "그래서 13시간은 빨랐어", [["時間(じかん)", "시간"], ["早(はや)い", "빠르다"]], "~かった: ~했다(형용사 과거)"],
+[223.3, 224.5, "名前(なまえ)は聞(き)いたことあるけど", "namae wa kiita koto aru kedo", "이름은 들어 본 적 있는데", [["名前(なまえ)", "이름"]], "~たことある: ~한 적 있다"],
+[227.9, 229.7, "見(み)てみたら面白(おもしろ)すぎて", "mite mitara omoshirosugite", "봤더니 너무 재밌어서", [["面白(おもしろ)い", "재밌다"]], "~すぎて: 너무 ~해서"],
+[231.5, 233.8, "行(い)く前(まえ)の飛行機(ひこうき)でずっと見(み)てた", "iku mae no hikouki de zutto mite ta", "가기 전 비행기에서 계속 봤어", [["前(まえ)", "전"], ["ずっと", "계속"]], "~前の: ~하기 전의"],
+[240.9, 241.9, "面白(おもしろ)かったです", "omoshirokatta desu", "재밌었어요", [["面白(おもしろ)い", "재밌다"]], "~かったです: ~했어요"]
+]},
+"89_kQ8hv5U4~03":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"뉴욕 첫날 · 8:58~9:24 · 7문장",a:538,b:564,L:[
+[539.4, 542.0, "今日(きょう)はニューヨーク初日(しょにち)で", "kyou wa nyuuyooku shonichi de", "오늘은 뉴욕 첫날이고", [["初日(しょにち)", "첫날"]], "~で: ~이고"],
+[542.7, 544.8, "初(はじ)めてのニューヨークだし", "hajimete no nyuuyooku da shi", "처음 온 뉴욕이고", [["初(はじ)めて", "처음"]], "~し: ~하고(이유 나열)"],
+[550.0, 552.4, "とにかくお散歩(さんぽ)しに行(い)こうかなって思(おも)ってる", "tonikaku osanpo shi ni ikou ka na tte omotte ru", "일단 산책하러 갈까 해", [["散歩(さんぽ)", "산책"], ["とにかく", "일단"]], "~しに行こうかな: ~하러 갈까"],
+[552.5, 553.4, "もう楽(たの)しみ", "mou tanoshimi", "벌써 기대돼", [["楽(たの)しみ", "기대"]], "もう: 벌써"],
+[555.9, 556.9, "一旦(いったん)水(みず)飲(の)んでいい？", "ittan mizu nonde ii?", "일단 물 마셔도 돼?", [["水(みず)", "물"], ["飲(の)む", "마시다"]], "~ていい？: ~해도 돼?"],
+[557.9, 559.2, "この水(みず)、何円(なんえん)だと思(おも)う？", "kono mizu, nan en da to omou?", "이 물 얼마일 것 같아?", [["何円(なんえん)", "몇 엔"]], "~と思う？: ~것 같아?"],
+[561.2, 562.9, "4(よん)ドルです", "yon doru desu", "4달러예요", [["ドル", "달러"]], "~です: ~예요"]
+]},
+"89_kQ8hv5U4~04":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"커피 값 · 10:34~11:02 · 5문장",a:634,b:662,L:[
+[635.4, 637.9, "日本(にほん)のLサイズみたいなものが来(き)たので", "nihon no eru saizu mitai na mono ga kita node", "일본 L 사이즈 같은 게 나와서", [["日本(にほん)", "일본"], ["来(き)た", "왔다"]], "~みたいな: ~같은"],
+[639.1, 640.8, "スモールサイズで大丈夫(だいじょうぶ)だと思(おも)います", "sumooru saizu de daijoubu da to omoimasu", "스몰 사이즈면 충분할 것 같아요", [["大丈夫(だいじょうぶ)", "괜찮음"]], "~だと思います: ~인 것 같아요"],
+[640.9, 643.4, "コーヒーは普通(ふつう)に1000円(せんえん)しました", "koohii wa futsuu ni sen en shimashita", "커피는 그냥 천 엔 했어요", [["普通(ふつう)に", "그냥/보통"], ["円(えん)", "엔"]], "값+しました: ~했어요(가격)"],
+[658.3, 659.6, "怖(こわ)いものはないです、もう", "kowai mono wa nai desu, mou", "이제 무서울 게 없어요", [["怖(こわ)い", "무섭다"]], "~はないです: ~는 없어요"],
+[660.2, 660.9, "しょうがない", "shouganai", "어쩔 수 없지", [["しょうがない", "어쩔 수 없다"]], "しょうがない: 어쩔 수 없다"]
+]},
+"89_kQ8hv5U4~05":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"밖에 나와 보니 · 11:10~11:39 · 7문장",a:670,b:699,L:[
+[671.3, 672.6, "びっくりした、あれは", "bikkuri shita, are wa", "그건 깜짝 놀랐어", [["びっくりする", "놀라다"]], "말 순서를 뒤집어 강조"],
+[677.2, 678.7, "青空(あおぞら)が広(ひろ)がっていて", "aozora ga hirogatte ite", "파란 하늘이 펼쳐져 있고", [["青空(あおぞら)", "파란 하늘"]], "~ていて: ~해 있고"],
+[678.8, 680.4, "ビルもめっちゃ高(たか)いし", "biru mo meccha takai shi", "빌딩도 엄청 높고", [["高(たか)い", "높다"]], "~し: ~하고"],
+[680.5, 682.0, "人(ひと)もいっぱいいるし", "hito mo ippai iru shi", "사람도 많이 있고", [["人(ひと)", "사람"], ["いっぱい", "많이"]], "~もいっぱいいる: ~도 많이 있다"],
+[686.1, 688.1, "うわ、ニューヨークだって", "uwa, nyuuyooku da tte", "우와, 뉴욕이다 싶었어", [["うわ", "우와"]], "~だって: ~라고(느낌)"],
+[694.4, 695.4, "一旦(いったん)シャワーを浴(あ)びて", "ittan shawaa o abite", "일단 샤워하고", [["浴(あ)びる", "(샤워를) 하다"]], "シャワーを浴びる: 샤워하다"],
+[695.5, 696.8, "外(そと)に出(で)ることにする", "soto ni deru koto ni suru", "밖에 나가기로 할게", [["外(そと)", "밖"], ["出(で)る", "나가다"]], "~ことにする: ~하기로 하다"]
+]},
+"89_kQ8hv5U4~06":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"베이글 가게 · 13:15~13:42 · 5문장",a:795,b:822,L:[
+[795.8, 798.0, "ベーグルショップめっちゃあるから", "beeguru shoppu meccha aru kara", "베이글 가게가 엄청 많으니까", [["ある", "있다"]], "~から: ~니까"],
+[799.5, 801.7, "多分(たぶん)そこら辺(へん)のベーグルショップでも美味(おい)しいと思(おも)う", "tabun sokora hen no beeguru shoppu demo oishii to omou", "아마 그 근처 베이글 가게도 맛있을 거야", [["多分(たぶん)", "아마"], ["美味(おい)しい", "맛있다"]], "~でも: ~라도"],
+[815.4, 816.9, "開(あ)かなくなっちゃって", "akanaku nacchatte", "안 열리게 돼 버려서", [["開(あ)く", "열리다"]], "~なくなる: ~안 하게 되다"],
+[818.4, 820.2, "化粧品(けしょうひん)がありそうだから", "keshouhin ga arisou da kara", "화장품이 있을 것 같으니까", [["化粧品(けしょうひん)", "화장품"]], "~そう: ~것 같다"],
+[820.3, 821.2, "買(か)おうかな", "kaou ka na", "살까", [["買(か)う", "사다"]], "~おうかな: ~할까"]
+]},
+"89_kQ8hv5U4~07":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"시차로 지쳐서 · 16:00~16:21 · 5문장",a:960,b:981,L:[
+[960.8, 962.7, "今(いま)ね、ニューヨークにいるじゃん", "ima ne, nyuuyooku ni iru jan", "지금 뉴욕에 있잖아", [["今(いま)", "지금"]], "~じゃん: ~잖아"],
+[962.8, 965.5, "もう時差(じさ)がおかしいことになってて", "mou jisa ga okashii koto ni natte te", "시차가 이상해져 있어서", [["時差(じさ)", "시차"], ["おかしい", "이상하다"]], "~ことになってて: ~하게 돼서"],
+[969.1, 970.8, "今(いま)からちょっとホテルに帰(かえ)ります", "ima kara chotto hoteru ni kaerimasu", "지금 잠깐 호텔로 돌아갈게요", [["帰(かえ)る", "돌아가다"]], "今から: 지금부터"],
+[970.9, 973.1, "水(みず)をどっかで買(か)いたいんだけど", "mizu o dokka de kaitai n da kedo", "물을 어디서 사고 싶은데", [["どっか", "어딘가"]], "~たいんだけど: ~하고 싶은데"],
+[979.5, 980.3, "どうしよう", "dou shiyou", "어떡하지", [["どうしよう", "어떡하지"]], "どうしよう: 어떡하지"]
+]},
+"89_kQ8hv5U4~08":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"밤에 피자 찾기 · 17:48~18:19 · 6문장",a:1068,b:1099,L:[
+[1068.5, 1069.5, "食(た)べれると思(おも)う？", "tabereru to omou?", "먹을 수 있을 것 같아?", [["食(た)べれる", "먹을 수 있다"]], "~と思う？: ~것 같아?"],
+[1071.3, 1074.5, "でもピザ食(た)べたいなって今(いま)思(おも)ってる", "demo piza tabetai na tte ima omotte ru", "근데 지금 피자 먹고 싶다고 생각해", [["食(た)べたい", "먹고 싶다"]], "~たいな: ~하고 싶다"],
+[1076.7, 1078.0, "ちょっと探(さが)してみる", "chotto sagashite miru", "좀 찾아볼게", [["探(さが)す", "찾다"]], "~てみる: ~해 보다"],
+[1089.6, 1090.9, "本当(ほんとう)にすごいと思(おも)う", "hontou ni sugoi to omou", "정말 대단한 것 같아", [["すごい", "대단하다"]], "~と思う: ~것 같아"],
+[1091.0, 1092.8, "私(わたし)、ホームシックになる、絶対(ぜったい)", "watashi, hoomushikku ni naru, zettai", "나 분명 향수병 걸릴 거야", [["絶対(ぜったい)", "분명"]], "~になる: ~이 되다"],
+[1096.8, 1098.2, "一目(ひとめ)見(み)てきます", "hitome mite kimasu", "한번 보고 올게요", [["見(み)てくる", "보고 오다"]], "~てきます: ~하고 올게요"]
+]},
+"89_kQ8hv5U4~09":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"사람 많은 거리와 옷 가게 · 19:45~20:16 · 7문장",a:1185,b:1216,L:[
+[1185.7, 1188.8, "人(ひと)が信(しん)じられないぐらいいる", "hito ga shinjirarenai gurai iru", "사람이 믿을 수 없을 만큼 있어", [["信(しん)じる", "믿다"]], "~ぐらい: ~만큼"],
+[1188.9, 1190.3, "渋谷(しぶや)より全然(ぜんぜん)いると思(おも)う", "shibuya yori zenzen iru to omou", "시부야보다 훨씬 많을 것 같아", [["より", "~보다"], ["全然(ぜんぜん)", "훨씬"]], "Aより: A보다"],
+[1191.7, 1193.2, "今(いま)GAPにいるんだけど", "ima gyappu ni iru n da kedo", "지금 GAP에 있는데", [["いる", "있다"]], "~にいる: ~에 있다"],
+[1203.4, 1205.4, "だけど寝(ね)たら解決(かいけつ)した", "dakedo netara kaiketsu shita", "근데 자고 나니 해결됐어", [["寝(ね)る", "자다"], ["解決(かいけつ)", "해결"]], "~たら: ~했더니"],
+[1205.5, 1208.3, "みんな悩(なや)みがあったら寝(ね)てください。お願(ねが)いします", "minna nayami ga attara nete kudasai. onegai shimasu", "다들 고민 있으면 자세요. 부탁해요", [["悩(なや)み", "고민"]], "~てください: ~해 주세요"],
+[1210.9, 1212.1, "可愛(かわい)い、これ", "kawaii, kore", "귀엽다, 이거", [["可愛(かわい)い", "귀엽다"]], "말 순서 뒤집기"],
+[1214.6, 1215.1, "ちょっと待(ま)って", "chotto matte", "잠깐만", [["待(ま)つ", "기다리다"]], "ちょっと待って: 잠깐만"]
+]},
+"89_kQ8hv5U4~10":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"이거 살게요 · 20:49~21:20 · 6문장",a:1249,b:1280,L:[
+[1249.8, 1250.3, "これ買(か)います", "kore kaimasu", "이거 살게요", [["買(か)う", "사다"]], "~ます: ~할게요"],
+[1250.4, 1252.3, "これもめっちゃ可愛(かわい)い", "kore mo meccha kawaii", "이것도 엄청 귀여워", [["も", "~도"]], "~も: ~도"],
+[1261.9, 1264.1, "旅行(りょこう)はおしゃれも大事(だいじ)だけど", "ryokou wa oshare mo daiji da kedo", "여행은 멋도 중요하지만", [["旅行(りょこう)", "여행"], ["大事(だいじ)", "중요"]], "~だけど: ~지만"],
+[1269.1, 1270.1, "とにかく動(うご)きやすいやつ", "tonikaku ugokiyasui yatsu", "아무튼 움직이기 편한 거", [["動(うご)く", "움직이다"]], "~やすい: ~하기 편하다"],
+[1270.2, 1271.7, "1番(いちばん)楽(らく)な服(ふく)が好(す)き", "ichiban raku na fuku ga suki", "제일 편한 옷이 좋아", [["1番(いちばん)", "제일"], ["服(ふく)", "옷"], ["楽(らく)", "편함"]], "~が好き: ~가 좋다"],
+[1277.2, 1279.1, "だから買(か)います", "dakara kaimasu", "그래서 살게요", [["だから", "그래서"]], "だから: 그래서"]
+]},
+"89_kQ8hv5U4~11":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"피자 앞에서 · 22:33~23:04 · 8문장",a:1353,b:1384,L:[
+[1353.6, 1355.2, "やばい、夢(ゆめ)叶(かな)った", "yabai, yume kanatta", "대박, 꿈 이뤘다", [["叶(かな)う", "이루어지다"]], "夢が叶う: 꿈이 이뤄지다"],
+[1355.3, 1356.7, "ニューヨークでピザ", "nyuuyooku de piza", "뉴욕에서 피자", [["で", "~에서"]], "장소+で: ~에서"],
+[1356.8, 1357.7, "ちょっと待(ま)って", "chotto matte", "잠깐만", [["待(ま)つ", "기다리다"]], "ちょっと待って"],
+[1362.2, 1363.5, "めっちゃ重(おも)いんだけど", "meccha omoi n da kedo", "엄청 무거운데", [["重(おも)い", "무겁다"]], "~んだけど: ~인데"],
+[1363.6, 1364.8, "食(た)べきれるかな", "tabekireru ka na", "다 먹을 수 있을까", [["食(た)べきる", "다 먹다"]], "~かな: ~일까"],
+[1370.9, 1373.1, "だからいける気(き)がする", "dakara ikeru ki ga suru", "그래서 될 것 같아", [["気(き)がする", "~할 것 같다"]], "~気がする: ~한 느낌이 든다"],
+[1375.8, 1376.7, "見(み)てください", "mite kudasai", "봐 주세요", [["見(み)る", "보다"]], "~てください"],
+[1381.9, 1382.9, "美味(おい)しそう", "oishisou", "맛있겠다", [["美味(おい)しい", "맛있다"]], "~そう: ~해 보여"]
+]},
+"89_kQ8hv5U4~12":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"자고 나니 괜찮아 · 23:32~23:53 · 6문장",a:1412,b:1433,L:[
+[1413.0, 1414.4, "ぐっすり寝(ね)たら", "gussuri netara", "푹 잤더니", [["ぐっすり", "푹"]], "~たら: ~했더니"],
+[1414.5, 1416.2, "なんか全(すべ)てが復活(ふっかつ)して", "nanka subete ga fukkatsu shite", "뭔가 다 회복돼서", [["全(すべ)て", "전부"]], "~して: ~해서"],
+[1416.3, 1419.1, "今(いま)もう楽(たの)しいって感(かん)じになった", "ima mou tanoshii tte kanji ni natta", "지금은 즐겁다는 느낌이 됐어", [["楽(たの)しい", "즐겁다"], ["感(かん)じ", "느낌"]], "~って感じ: ~라는 느낌"],
+[1421.9, 1423.8, "寝(ね)れば大丈夫(だいじょうぶ)、なんとかなる", "nereba daijoubu, nantoka naru", "자면 괜찮아, 어떻게든 돼", [["なんとかなる", "어떻게든 되다"]], "~ば: ~하면"],
+[1428.4, 1429.8, "多分(たぶん)元気(げんき)出(で)ると思(おも)います", "tabun genki deru to omoimasu", "아마 힘이 날 거예요", [["元気(げんき)", "기운"]], "元気が出る: 힘이 나다"],
+[1430.3, 1432.0, "ねえ、ホテルどこ？マジでない", "nee, hoteru doko? maji de nai", "저기, 호텔 어디야? 진짜 없어", [["どこ", "어디"], ["マジで", "진짜로"]], "どこ？: 어디?"]
+]},
+"89_kQ8hv5U4~13":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"호텔로 돌아와서 · 24:27~24:49 · 5문장",a:1467,b:1489,L:[
+[1467.6, 1469.6, "ホテルに帰(かえ)ってきました", "hoteru ni kaette kimashita", "호텔로 돌아왔어요", [["帰(かえ)る", "돌아가다"]], "~てきました: ~하고 왔어요"],
+[1476.8, 1478.7, "1日(いちにち)で全部(ぜんぶ)見(み)たって感(かん)じ", "ichinichi de zenbu mita tte kanji", "하루 만에 다 본 느낌", [["全部(ぜんぶ)", "전부"]], "~って感じ: ~라는 느낌"],
+[1479.3, 1481.2, "ピザ、2切(ふたき)れ", "piza, futakire", "피자 두 조각", [["2切(ふたき)れ", "두 조각"]], "~切れ: ~조각"],
+[1485.0, 1486.5, "やっぱ欲(ほ)しいかもと思(おも)って", "yappa hoshii kamo to omotte", "역시 먹고 싶을지도 해서", [["欲(ほ)しい", "갖고 싶다"]], "~かも: ~일지도"],
+[1486.6, 1488.2, "2切(ふたき)れって言(い)ったけど", "futakire tte itta kedo", "두 조각이라고 했는데", [["言(い)う", "말하다"]], "~って言った: ~라고 말했다"]
+]},
+"89_kQ8hv5U4~14":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"피자가 너무 커 · 24:51~25:20 · 6문장",a:1491,b:1520,L:[
+[1491.8, 1493.4, "多分(たぶん)これ食(た)べきれないから", "tabun kore tabekirenai kara", "아마 이거 다 못 먹으니까", [["食(た)べきれない", "다 못 먹다"]], "~から: ~니까"],
+[1493.5, 1494.9, "後(あと)で食(た)べることにする", "ato de taberu koto ni suru", "나중에 먹기로 할게", [["後(あと)で", "나중에"]], "~ことにする: ~하기로 하다"],
+[1498.3, 1499.9, "行(い)くよ、このピザ", "iku yo, kono piza", "간다, 이 피자", [["行(い)く", "가다"]], "~よ: ~야(알림)"],
+[1503.7, 1506.4, "待(ま)って待(ま)って。大(おお)きすぎない？", "matte matte. ookisugi nai?", "잠깐 잠깐. 너무 크지 않아?", [["大(おお)きい", "크다"]], "~すぎない？: 너무 ~하지 않아?"],
+[1514.2, 1515.5, "いただきます", "itadakimasu", "잘 먹겠습니다", [["いただきます", "잘 먹겠습니다"]], "먹기 전 인사"],
+[1517.4, 1518.7, "どうやって食(た)べればいい？", "dou yatte tabereba ii?", "어떻게 먹으면 돼?", [["どうやって", "어떻게"]], "~ばいい？: ~하면 돼?"]
+]},
+"89_kQ8hv5U4~15":{v:"89_kQ8hv5U4",t:"hannah · 첫 뉴욕 혼자 여행",s:"뉴욕 피자 맛 · 26:45~27:17 · 7문장",a:1605,b:1637,L:[
+[1608.0, 1609.2, "美味(おい)しい", "oishii", "맛있다", [["美味(おい)しい", "맛있다"]], "美味しい"],
+[1609.3, 1610.4, "初(はじ)めて食(た)べたんだけど", "hajimete tabeta n da kedo", "처음 먹어 봤는데", [["初(はじ)めて", "처음"]], "~たんだけど: ~했는데"],
+[1610.5, 1611.5, "これめっちゃ美味(おい)しい", "kore meccha oishii", "이거 엄청 맛있어", [["めっちゃ", "엄청"]], "めっちゃ~"],
+[1618.0, 1619.4, "ドリンクは1000円(せんえん)ぐらい", "dorinku wa sen en gurai", "음료는 천 엔쯤", [["ぐらい", "~쯤"]], "~ぐらい: ~쯤"],
+[1625.2, 1627.5, "高(たか)って感(かん)じでもないかも", "taka tte kanji demo nai kamo", "비싸다는 느낌도 아닐지도", [["高(たか)い", "비싸다"]], "~かも: ~일지도"],
+[1627.6, 1629.7, "なぜなら全(すべ)てが大(おお)きいからね", "nazenara subete ga ookii kara ne", "왜냐하면 다 크니까", [["なぜなら", "왜냐하면"]], "なぜなら~から: 왜냐하면 ~니까"],
+[1633.3, 1635.6, "今日(きょう)初(はじ)めてニューヨークに来(き)た日(ひ)", "kyou hajimete nyuuyooku ni kita hi", "오늘이 처음 뉴욕에 온 날", [["日(ひ)", "날"], ["来(き)た", "왔다"]], "~た日: ~한 날"]
 ]},
 "cLC_Bwl4fng":{t:"hannah · 뉴욕 혼자 여행 전날",s:"짐 싸다 털어놓는 걱정 · 1:02~1:39 · 12문장",a:62,b:99,L:[
 [62.8, 64.6, "ニューヨークに行(い)きます。やばい！", "nyuuyooku ni ikimasu. yabai!", "뉴욕에 가요. 대박!", [["やばい", "대박/큰일(감탄)"]], "やばい: 좋을 때도 나쁠 때도 쓰는 감탄"],
@@ -521,35 +640,61 @@ function lineHtml(s){
  }
  return html;
 }
+/* 가나 익히기: 주마다 한 행 · 익힌 글자는 로마자 없음 (2026-11-21 v4) */
+const KG=['あいうえおかきくけこがぎぐげご','さしすせそざじずぜぞ','たちつてとだぢづでどっ','なにぬねの','はひふへほばびぶべぼぱぴぷぺぽ','まみむめも','やゆよゃゅょらりるれろわをん','ぁぃぅぇぉゔ'];
+const KSTART=Date.parse('2026-11-23T00:00:00+09:00');
+const KW=Math.max(0,Math.floor((Date.now()-KSTART)/(7*864e5)));
+let KS={};try{KS=JSON.parse(localStorage.getItem('jpkana')||'{}')}catch(e){}
+const kSave=()=>{try{localStorage.setItem('jpkana',JSON.stringify(KS))}catch(e){}};
+function kWeek(c){const n=c.charCodeAt(0);const kata=n>=0x30A1&&n<=0x30F6;const h=kata?String.fromCharCode(n-0x60):c;const g=KG.findIndex(r=>r.includes(h));return g<0?-1:g+(kata?KG.length:0)}
+function kState(c){const w=kWeek(c);if(w<0)return 'x';const k=KS[c]||{};const now=Date.now();
+ if(k.tap&&now-k.tap<7*864e5)return w===KW?'target':'later';
+ if(w<KW||(k.s>=3))return 'known';return w===KW?'target':'later'}
+function kTap(str){const now=Date.now();[...str].forEach(c=>{if(kWeek(c)>=0){KS[c]=Object.assign({},KS[c],{tap:now,s:0})}});kSave()}
+function kQuiz(c,ok){const k=KS[c]||{};KS[c]=Object.assign({},k,{s:ok?(k.s||0)+1:0,qt:Date.now()});kSave()}
+function kWeekChars(){const g=KW%KG.length;const r=KG[g].replace(/[ゃゅょっぁぃぅぇぉゔがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ]/g,'');return KW>=KG.length?[...r].map(c=>String.fromCharCode(c.charCodeAt(0)+0x60)).join(''):r}
+const rtRom=u=>{const h=[...u].map(toH).join('');return h==='っ'?'·':h==='ー'?'—':romUnit(u)};
+/* 문장 → 가나 먼저 HTML: 한자는 읽기 가나로 바꿔 보여 줌 */
+function kanaHtml(s){const kana=s.replace(RX,'$2');let html='';
+ for(const u of units([...kana])){if(isKana(u[0])){const stt=kState(u[0]);const r=rtRom(u);html+=`<ruby class="u k s-${stt}" data-w="1" data-r="${romUnit(u)}">${u}<rt>${stt==='known'?'':r}</rt></ruby>`}
+  else html+=(/[0-9A-Za-z]/.test(u)?`<span class="u" data-w="1">${u}</span>`:u)}
+ return html}
 const HASH=decodeURIComponent((location.hash||'').slice(1));
 const APP='https://claude.ai/artifact/GzsiTVer3f5bMfRdraSETH';
+const VLIST=HASH.startsWith('V:')?HASH.slice(2):'';
 const LIST=!HASH||!SCENES[HASH];
+const vOf=id=>SCENES[id].v||id;
 window.addEventListener('hashchange',()=>location.reload());
-document.getElementById('back').textContent=LIST?'‹ 일본어':'‹ 장면 고르기';
-document.getElementById('back').onclick=()=>{ if(!LIST){location.hash='';return} if(history.length>1){history.back();setTimeout(()=>{location.href=APP},500)}else{try{window.close()}catch(e){} setTimeout(()=>{location.href=APP},300)} };
+document.getElementById('back').textContent=VLIST?'‹ 영상 고르기':LIST?'‹ 일본어':'‹ 장면 고르기';
+document.getElementById('back').onclick=()=>{ if(VLIST){location.hash='';return} if(!LIST){const sv=SCENES[HASH];const n=Object.keys(SCENES).filter(k=>vOf(k)===vOf(HASH)).length;location.hash=(sv.v&&n>1)?'V:'+sv.v:'';return} if(history.length>1){history.back();setTimeout(()=>{location.href=APP},500)}else{try{window.close()}catch(e){} setTimeout(()=>{location.href=APP},300)} };
 function sceneState(id){let o={};try{o=JSON.parse(localStorage.getItem('jpscene2.'+id)||'{}')}catch(e){}const n=SCENES[id].L.length;const ok=Object.values(o.m||{}).filter(x=>x==='ok').length;const due=Object.values(o.due||{}).filter(t=>t<=Date.now()).length;return {n,ok,due,started:!!(o.visits)}}
+function chipOf(x){return x.due?`<span class="lchip due">다시 볼 말 ${x.due}</span>`:!x.started?`<span class="lchip go">새 장면</span>`:x.ok>=x.n?`<span class="lchip ok">입에 붙음</span>`:`<span class="lchip">${x.ok}/${x.n}</span>`}
 function renderList(){document.body.classList.add('list');['p-intro','p-lines','p-end'].forEach(x=>{const e=document.getElementById(x);if(e)e.hidden=true});
- document.getElementById('vt').textContent='한 장면 더';document.getElementById('vs').textContent='영상 원래 목소리로 한 문장씩 · '+Object.keys(SCENES).length+'편';
- const ids=Object.keys(SCENES);const st=ids.map((id,i)=>({id,i,...sceneState(id)}));
- const due=st.filter(x=>x.due>0),go=st.filter(x=>!x.due&&x.started&&x.ok<x.n),nw=st.filter(x=>!x.started),done=st.filter(x=>!x.due&&x.started&&x.ok>=x.n);
- const row=x=>{const S=SCENES[x.id];const chip=x.due?`<span class="lchip due">다시 볼 말 ${x.due}</span>`:!x.started?`<span class="lchip go">새 장면</span>`:x.ok>=x.n?`<span class="lchip ok">입에 붙음</span>`:`<span class="lchip">${x.ok}/${x.n}</span>`;return `<button class="lrow" data-id="${x.id}"><span class="tx"><b>${S.t}</b><em>${S.s}</em></span>${chip}</button>`};
- let h='';if(due.length)h+=`<h2 class="sec">다시 볼 말이 있는 장면</h2>`+due.map(row).join('');
- if(go.length)h+=`<h2 class="sec">하던 장면</h2>`+go.map(row).join('');
- if(nw.length)h+=`<h2 class="sec">새 장면</h2>`+nw.map(row).join('');
- if(done.length)h+=`<h2 class="sec">입에 붙은 장면</h2>`+done.map(row).join('');
- const L=document.getElementById('p-list');L.innerHTML=h;L.hidden=false;
- L.onclick=e=>{const b=e.target.closest('[data-id]');if(b)location.hash=b.dataset.id};}
+ const ids=Object.keys(SCENES);const all=ids.map((id,i)=>({id,i,v:vOf(id),...sceneState(id)}));const P=document.getElementById('p-list');
+ if(VLIST){const mine=all.filter(x=>x.v===VLIST);const S0=SCENES[mine[0].id];
+  document.getElementById('vt').textContent=S0.t;document.getElementById('vs').textContent=`장면 ${mine.length}개 · 20~30초씩 · 쉬운 말 위주`;
+  P.innerHTML=mine.map((x,k)=>`<button class="lrow" data-id="${x.id}"><span class="tx"><b>장면 ${k+1} · ${SCENES[x.id].s.split(' · ')[0]}</b><em>${SCENES[x.id].s.split(' · ').slice(1).join(' · ')}</em></span>${chipOf(x)}</button>`).join('');
+  P.hidden=false;P.onclick=e=>{const b=e.target.closest('[data-id]');if(b)location.hash=b.dataset.id};return}
+ const vids=[...new Set(all.map(x=>x.v))];
+ const V=vids.map(v=>{const m=all.filter(x=>x.v===v);return {v,first:m[0].id,n:m.length,due:m.reduce((a,x)=>a+x.due,0),started:m.some(x=>x.started),ok:m.filter(x=>x.started&&x.ok>=x.n).length}});
+ document.getElementById('vt').textContent='한 장면 더';document.getElementById('vs').textContent=`영상 ${V.length}편 · 장면 ${ids.length}개 · 이번 주 글자 ${kWeekChars()}`;
+ const row=x=>{const S=SCENES[x.first];const chip=x.due?`<span class="lchip due">다시 볼 말 ${x.due}</span>`:!x.started?`<span class="lchip go">${x.n>1?'장면 '+x.n:'새 장면'}</span>`:`<span class="lchip">${x.ok}/${x.n}</span>`;return `<button class="lrow" data-v="${x.v}" data-first="${x.first}" data-n="${x.n}"><span class="tx"><b>${S.t}</b><em>${x.n>1?'장면 '+x.n+'개':S.s}</em></span>${chip}</button>`};
+ const due=V.filter(x=>x.due>0),go=V.filter(x=>!x.due&&x.started),nw=V.filter(x=>!x.due&&!x.started);
+ let h='';if(due.length)h+=`<h2 class="sec">다시 볼 말이 있는 영상</h2>`+due.map(row).join('');
+ if(go.length)h+=`<h2 class="sec">하던 영상</h2>`+go.map(row).join('');
+ if(nw.length)h+=`<h2 class="sec">새 영상</h2>`+nw.map(row).join('');
+ P.innerHTML=h;P.hidden=false;
+ P.onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;location.hash=(+b.dataset.n>1)?'V:'+b.dataset.v:b.dataset.first};}
 if(LIST){renderList()}else{
-const vidId=HASH;
-const S=SCENES[vidId]||SCENES[Object.keys(SCENES)[0]], L=S.L;
-const KEY='jpscene2.'+vidId, DAY=864e5, IV=[1,3,7,14,30];
+const sceneId=HASH;const S=SCENES[sceneId]||SCENES[Object.keys(SCENES)[0]], L=S.L;const vidId=S.v||sceneId;
+const KEY='jpscene2.'+sceneId, DAY=864e5, IV=[1,3,7,14,30];
 /* 기록 받는 주소(구글 Apps Script 웹 앱). 비어 있으면 기록을 폰에 모아 두었다가 주소가 생기면 한꺼번에 보냄 */
 const ENDPOINT='https://script.google.com/macros/s/AKfycbyExkEh-f8MVxlYVNqh_TGXxmmWKblC1PKfJp8IUs_fA4RrLO6Pl09x_meunSPFrL60/exec';
 let st={i:0,m:{},hide:{ko:false,ro:false,fu:false,ja:false},visits:0,taps:{},saved:{},due:{},str:{},ks:{},q:[]};
 try{const o=JSON.parse(localStorage.getItem(KEY)||'{}');st=Object.assign(st,o);st.hide=Object.assign({ko:false,ro:false,fu:false,ja:false},o.hide||{});st.str=st.str||{};st.ks=st.ks||{};st.q=st.q||[]}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
 /* 커리큘럼 신호: 화면엔 안 보이고 기록으로만 감 */
-function logEv(kind,line,key,val,extra){st.q.push({at:new Date().toISOString(),vid:vidId,line:line,kind:kind,key:key||'',val:val===undefined?'':val,extra:extra||''});if(st.q.length>400)st.q=st.q.slice(-400);save()}
+function logEv(kind,line,key,val,extra){st.q.push({at:new Date().toISOString(),vid:sceneId,line:line,kind:kind,key:key||'',val:val===undefined?'':val,extra:extra||''});if(st.q.length>400)st.q=st.q.slice(-400);save()}
 let flushing=false;
 function flush(){if(!ENDPOINT||!st.q.length||flushing)return;flushing=true;const ev=st.q.slice(0,200);
  fetch(ENDPOINT,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({ev})})
@@ -591,8 +736,8 @@ let plays=0,auto=false,autoTok=0,preTimer=null;
 const ORDER=['ko','ro','fu','ja'];
 function setCover(on){$('cover').classList.toggle('on',on)}
 function applyHide(){const h=st.hide;
- $('ko').classList.toggle('mask',h.ko);$('ro').classList.toggle('mask',h.ro);
- $('ja').classList.toggle('nofu',h.fu);$('ja').classList.toggle('hide',h.ja);$('ja').classList.toggle('tap',h.ro&&!h.ja);
+ $('ko').classList.toggle('mask',h.ko);$('ro').hidden=h.ro;
+ $('orig').hidden=h.fu;$('ja').classList.toggle('hide',h.ja);$('ja').classList.toggle('tap',h.ro&&!h.ja);
  document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('off',h[c.dataset.h]));
  setCover(h.ja);
  const lv=ORDER.filter(k=>h[k]).length;$('less').disabled=lv===4;$('more').disabled=lv===0;
@@ -600,7 +745,7 @@ function applyHide(){const h=st.hide;
 function render(){const l=L[st.i];
  $('no').textContent=(st.i+1)+' / '+L.length;
  $('mark').textContent=st.m[st.i]==='ok'?'입에 붙음':st.m[st.i]==='again'?'다시 볼 말':'';
- $('ja').innerHTML=lineHtml(l[2]);$('ro').textContent=l[3];$('ko').textContent=l[4];$('pre').textContent=auto?'지하철 자동 · 듣고 3초 따라 하고 한 번 더':'';
+ $('ja').innerHTML=kanaHtml(l[2]);$('orig').innerHTML=rubyHtml(l[2]);$('wk').innerHTML=`이번 주 글자 <b>${kWeekChars()}</b> · 노란 글자만 로마자가 붙어요`;$('ro').textContent=l[3];$('ko').textContent=l[4];$('pre').textContent=auto?'지하철 자동 · 듣고 3초 따라 하고 한 번 더':'';
  $('w').innerHTML=l[5].map(([w,m])=>`<button data-wd="${plain(w)}" class="${st.saved[plain(w)]?'on':''}"><span>${rubyHtml(w)}</span><em>${m}${st.saved[plain(w)]?' · 담음':''}</em></button>`).join('');
  $('pt').textContent=l[6];
  $('dots').innerHTML=L.map((_,k)=>`<i class="${k===st.i?'on':''} ${st.m[k]||''}"></i>`).join('');
@@ -614,14 +759,14 @@ function lit(p){const us=[...$('ja').querySelectorAll('.u')];if(!us.length)retur
 function clearLit(){document.querySelectorAll('#ja .u.lit').forEach(u=>u.classList.remove('lit'))}
 function playLine(cb){const l=L[st.i];litOn=true;seg(Math.max(0,l[0]-0.15),l[1]+0.25,cb)}
 $('play').onclick=()=>{stopAuto();clearTimeout(preTimer);
- if(plays===0&&st.hide.ro&&!st.hide.ja){let n=3;$('pre').textContent=`속으로 먼저 읽어 봐요 · ${n}`;
-  const tick=()=>{n--;if(n>0){$('pre').textContent=`속으로 먼저 읽어 봐요 · ${n}`;preTimer=setTimeout(tick,1000)}else{$('pre').textContent='';plays++;playLine()}};preTimer=setTimeout(tick,1000);return}
+ if(plays===0&&!st.hide.ja&&$('ja').querySelector('.s-target')){let n=3;$('pre').textContent=`노란 글자 먼저 읽어 봐요 · ${n}`;
+  const tick=()=>{n--;if(n>0){$('pre').textContent=`노란 글자 먼저 읽어 봐요 · ${n}`;preTimer=setTimeout(tick,1000)}else{$('pre').textContent='';plays++;playLine()}};preTimer=setTimeout(tick,1000);return}
  plays++;playLine()};
 let lineTaps=0;
 function leaveLine(){const i=st.i;if(!plays&&!lineTaps)return;const lv=ORDER.filter(x=>st.hide[x]).length;
  if(!auto){if(plays>=4||(lineTaps>=2&&lv<2))bump(i,-1);else if(lv>=2&&plays<=2)bump(i,1);}
  st.seen=Object.assign({},st.seen,{[i]:1});logEv('line',i,'plays',plays,`hide=${lv};taps=${lineTaps};str=${strOf(i)}`);lineTaps=0}
-function autoHide(){const s=strOf(st.i);st.hide={ko:s>=2,ro:st.visits>=2||s>=3,fu:s>=4,ja:false}}
+function autoHide(){const s=strOf(st.i);st.hide={ko:s>=2,ro:true,fu:s>=3,ja:false}}
 function go(k){stopSeg();clearTimeout(preTimer);leaveLine();flush();
  if(k>=L.length){toEnd();return}
  st.i=Math.max(0,k);plays=0;autoHide();
@@ -641,9 +786,9 @@ document.addEventListener('click',e=>{const m=e.target.closest('.mask');if(m){m.
  if(e.target.closest('#ja.hide')){$('ja').classList.remove('hide');setTimeout(applyHide,2500);return}});
 /* 가나 누르기 → 로마자 */
 let tipEl=null;
-$('ja').addEventListener('click',e=>{if(!st.hide.ro||st.hide.ja)return;const kt=e.target.closest('.kt');const u=e.target.closest('.k');if(!u&&!kt)return;
+$('ja').addEventListener('click',e=>{if(st.hide.ja)return;const kt=e.target.closest('.kt');const u=e.target.closest('.k');if(!u&&!kt)return;
  const target=kt||u;const r=target.dataset.r||u.dataset.r;const key=kt?kt.textContent:(u.firstChild.nodeValue||u.textContent);
- lineTaps++;[...key].filter(c=>/[ぁ-ゖァ-ヶ]/.test(c)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッ'.includes(c)).forEach(c=>{st.taps[c]=(st.taps[c]||0)+1;st.ks[c]=(st.ks[c]||0)-1});logEv('kana',st.i,key,r);save();
+ lineTaps++;[...key].filter(c=>/[ぁ-ゖァ-ヶ]/.test(c)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッ'.includes(c)).forEach(c=>{st.taps[c]=(st.taps[c]||0)+1;st.ks[c]=(st.ks[c]||0)-1});logEv('kana',st.i,key,r);save();kTap(key);
  const rc=target.getBoundingClientRect();if(tipEl)tipEl.remove();tipEl=document.createElement('div');tipEl.className='tip';tipEl.textContent=r;tipEl.style.left=(rc.left+rc.width/2)+'px';tipEl.style.top=rc.top+'px';document.body.appendChild(tipEl);const me=tipEl;setTimeout(()=>me.remove(),1400)});
 /* 카드 밀기 */
 let x0=null;$('cur').addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
@@ -664,12 +809,12 @@ $('auto').onclick=()=>{if(auto){stopAuto();stopSeg();return}auto=true;autoTok++;
 /* 3 장면 끝: 글자 3개 → 떠올리기 → 자막 없이 쭉 → 끝 */
 let endQ=[],eStep=0,eIdx=0;
 function sceneKana(){const c={};L.forEach(l=>{[...plain(l[2])].forEach(ch=>{if(/[ぁ-ゖァ-ヶ]/.test(ch)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッをん'.includes(ch))c[ch]=(c[ch]||0)+1})});return c}
-function pickKana(){const tapped=Object.entries(st.ks).filter(x=>x[1]<0).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);const all=Object.keys(sceneKana());const out=[...new Set(tapped)].slice(0,3);for(const k of all.sort(()=>Math.random()-.5)){if(out.length>=3)break;if(!out.includes(k))out.push(k)}return {out,all,fromTap:tapped.length>0}}
+function pickKana(){const tapped=Object.entries(st.ks).filter(x=>x[1]<0).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);const all=Object.keys(sceneKana());const tgt=all.filter(k=>kState(k)==='target');const out=[...new Set(tapped.concat(tgt.sort(()=>Math.random()-.5)))].slice(0,3);for(const k of all.sort(()=>Math.random()-.5)){if(out.length>=3)break;if(!out.includes(k))out.push(k)}return {out,all,fromTap:tapped.length>0}}
 function toEnd(){stopSeg();setCover(false);logEv("end",-1,"ok",L.filter((_,k)=>st.m[k]==="ok").length);flush();const p=pickKana();endQ=p.out;window.__kpool=p.all;eStep=0;eIdx=0;show('end');renderEnd()}
 function renderEnd(){const c=$('endCard');
  if(eStep===0){const k=endQ[eIdx];const right=romUnit(k);const pool=[...new Set(window.__kpool.map(romUnit))].filter(r=>r!==right).sort(()=>Math.random()-.5).slice(0,3);const opts=[right,...pool].sort(()=>Math.random()-.5);
   c.innerHTML=`<p class="step-h">마무리 1 · 오늘의 글자 ${eIdx+1} / ${endQ.length}</p><p class="big">이 글자, 어떻게 읽어요?</p><div class="kana">${k}</div><div class="opts">${opts.map(o=>`<button class="btn" data-o="${o}">${o}</button>`).join('')}</div><div class="gap"></div><button class="btn wide" id="eNext" hidden>다음 ›</button>`;
-  c.querySelector('.opts').onclick=e=>{const b=e.target.closest('[data-o]');if(!b)return;const okk=b.dataset.o===right;st.ks[k]=okk?Math.min(2,(st.ks[k]||0)+1):Math.min(-1,(st.ks[k]||0)-1);logEv('quiz',-1,k,okk?1:0,b.dataset.o);save();c.querySelectorAll('[data-o]').forEach(x=>{x.classList.add(x.dataset.o===right?'right':'wrong');x.disabled=true});$('eNext').hidden=false};
+  c.querySelector('.opts').onclick=e=>{const b=e.target.closest('[data-o]');if(!b)return;const okk=b.dataset.o===right;st.ks[k]=okk?Math.min(2,(st.ks[k]||0)+1):Math.min(-1,(st.ks[k]||0)-1);kQuiz(k,okk);logEv('quiz',-1,k,okk?1:0,b.dataset.o);save();c.querySelectorAll('[data-o]').forEach(x=>{x.classList.add(x.dataset.o===right?'right':'wrong');x.disabled=true});$('eNext').hidden=false};
   $('eNext').onclick=()=>{eIdx++;if(eIdx>=endQ.length){eStep=1;eIdx=0}renderEnd()};return}
  if(eStep===1){const ag=L.map((_,k)=>k).filter(k=>st.m[k]==='again');if(!ag.length){eStep=2;renderEnd();return}
   const k=ag[eIdx];const l=L[k];
