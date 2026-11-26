@@ -90,6 +90,12 @@ body.list .box{display:none}
 .mask{background:var(--accent-soft);color:transparent!important;border-radius:var(--r-chip);cursor:pointer}
 .tip{position:fixed;z-index:20;transform:translate(-50%,-110%);background:var(--ink);color:var(--bg);font-size:var(--fs-3);font-weight:700;padding:6px 12px;border-radius:var(--r-chip);pointer-events:none;white-space:nowrap}
 .pre{font-size:var(--fs-5);color:var(--accent-ink);margin-top:var(--s3);min-height:24px}
+.gate{margin-top:var(--s3);padding:var(--s4);border-radius:var(--r-face);background:var(--band)}.gate.done{background:var(--pos-soft)}
+.gq{margin:0 0 var(--s2);font-size:var(--fs-4);color:var(--ink)}.gq b{color:var(--warn)}
+.grow{display:flex;gap:var(--s2)}.grow input{flex:1;min-width:0;min-height:48px;border-radius:var(--r-face);border:0;background:var(--card);color:var(--ink);font:inherit;font-size:var(--fs-3);padding:0 var(--s3)}
+.gh{margin:var(--s2) 0 0;font-size:var(--fs-5);color:var(--ink2);min-height:22px}.gate.done .gh{color:var(--pos)}
+.glink{margin-top:var(--s1);font-size:var(--fs-5);color:var(--ink3);min-height:36px}
+#next:disabled{opacity:.35}
 .ctl{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:var(--s2);margin:var(--s3) 0 var(--s2)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-bottom:var(--s3)}
 .btn.sel-ok{background:#0B7A4E;color:#fff}.btn.sel-again{background:#5A4410;color:#fff}
@@ -151,6 +157,7 @@ summary{font-weight:600;cursor:pointer;min-height:24px}
    <div class="ro" id="ro"></div>
    <div class="ko" id="ko"></div>
    <div class="pre" id="pre"></div>
+   <div class="gate" id="gate"><p class="gq" id="gq"></p><div class="grow"><input id="gin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="로마자로 쳐 보기"><button class="btn sm pri" id="gok">확인</button></div><p class="gh" id="gh"></p><button class="glink" id="gno">모르겠어 · 답 보기</button></div>
   </div>
   <div class="ctl">
    <button class="btn" id="prev">‹ 이전</button>
@@ -160,7 +167,7 @@ summary{font-weight:600;cursor:pointer;min-height:24px}
   <div class="row2"><button class="btn sm" id="less">한 단계 줄이기 ▸</button><button class="btn sm" id="more">◂ 다시 보이기</button></div>
   <div class="row2"><button class="btn sm" id="ok">입에 붙었어</button><button class="btn sm" id="again">다시 볼래</button></div>
   <details id="exd"><summary>이 문장 뜯어보기</summary><div class="ex"><span class="k2">낱말 · 누르면 담아 둬요(1·3·7일 뒤 이 문장부터)</span><div class="wd" id="w"></div><span class="k2">말의 틀</span><p id="pt"></p></div></details>
-  <p class="note">⟲는 다시 듣기만 해요. 글자는 위 칩이나 「한 단계 줄이기」로 내가 정해요. 로마자 칩으로 낱말 위 로마자를 한꺼번에 끄고 켜요. 끄면 모르는 낱말을 눌러 보세요. 들리는 문장만 진하게 보여요. 글자 불빛은 소리에 맞춘 어림값이에요.</p>
+  <p class="note">카드 하나는 영상 10~15초를 끊지 않고 그대로 틀어요. 들리는 문장만 진하게 보여요. 다음 카드로 가려면 아래 칸에 뜻을 보고 그 말을 로마자로 쳐야 해요(소리 없이 머리에서 꺼내 보기). 로마자 칩으로 낱말 위 로마자를 끄고 켤 수 있어요.</p>
  </section>
 
  <!-- 3 장면 끝 -->
@@ -1117,6 +1124,194 @@ const SCENES={
 [50.0,52.0,"だけどお菓子(かし)を2個(にこ)買(か)いました。","dakedo okashi o niko kaimashita.","그런데 과자를 두 개 샀어요.",[["お菓子(かし)","과자"],["だけど","그런데"]],"~ました: 공손한 과거"],
 [52.1,53.4,"本当(ほんとう)に悔(くや)しい。","hontou ni kuyashii.","진짜 분해.",[["悔(くや)しい","분하다·속상하다"]],"감정 한 마디. 本当に로 세게"],
 [64.9,67.6,"飛行機(ひこうき)に乗(の)る前(まえ)の、この時間(じかん)大好(だいす)きなの。","hikouki ni noru mae no, kono jikan daisuki na no.","비행기 타기 전의 이 시간이 너무 좋아.",[["飛行機(ひこうき)","비행기"],["乗(の)る","타다"],["大好(だいす)き","아주 좋아함"]],"~前の: ~하기 전의"]
+]},
+"74Ez5cX-DSY~01":{v:"74Ez5cX-DSY",t:"hannah · 단기 어학연수 첫 등교날",s:"학교 가는 길 · 1:52~2:04 · 6문장",a:112,b:124,L:[
+[112.7,113.7,"ここじゃないと思(おも)って","koko ja nai to omotte","여기가 아닌 줄 알고",[["思(おも)う", "생각하다"]],"~と思って: ~라고 생각해서"],
+[113.7,115.5,"1回(いっかい)通(とお)り過(す)ぎたんだけど","ikkai toorisugita n da kedo","한 번 지나쳤는데",[["通(とお)り過(す)ぎる", "지나치다"]],"~たんだけど: ~했는데"],
+[115.5,116.5,"この坂(さか)だった","kono saka datta","이 언덕이었어",[["坂(さか)", "언덕"]],"~だった: ~였다"],
+[118.6,120.0,"学校(がっこう)に着(つ)きました","gakkou ni tsukimashita","학교에 도착했어요",[["学校(がっこう)", "학교"], ["着(つ)く", "도착하다"]],"~に着きました: ~에 도착했어요"],
+[120.0,121.6,"私(わたし)の寮(りょう)からは歩(ある)いて","watashi no ryou kara wa aruite","제 기숙사에서 걸어서",[["歩(ある)く", "걷다"], ["寮(りょう)", "기숙사"]],"~から: ~에서"],
+[121.6,123.4,"10分(じゅっぷん)から15分(じゅうごふん)ぐらいかな","juppun kara juugofun gurai ka na","10분에서 15분쯤일까",[["ぐらい", "~쯤"]],"AからBぐらい: A에서 B쯤"]
+]},
+"74Ez5cX-DSY~02":{v:"74Ez5cX-DSY",t:"hannah · 단기 어학연수 첫 등교날",s:"첫 수업 끝 · 3:10~3:21 · 5문장",a:190,b:201,L:[
+[190.1,192.0,"なんかグループ授業(じゅぎょう)初(はじ)めてだったけど","nanka guruupu jugyou hajimete datta kedo","그룹 수업은 처음이었는데",[["授業(じゅぎょう)", "수업"], ["初(はじ)めて", "처음"]],"~だったけど: ~였는데"],
+[192.0,193.3,"すごく楽(たの)しい時間(じかん)だった","sugoku tanoshii jikan datta","정말 즐거운 시간이었어",[["楽(たの)しい", "즐겁다"], ["時間(じかん)", "시간"]],"~だった: ~였다"],
+[193.3,195.6,"学校(がっこう)初日(しょにち)終(お)わりました","gakkou shonichi owarimashita","학교 첫날이 끝났어요",[["初日(しょにち)", "첫날"], ["終(お)わる", "끝나다"]],"~ました: ~했어요"],
+[195.6,197.6,"なんかベーカリーの話(はなし)になって","nanka beekarii no hanashi ni natte","빵집 이야기가 나와서",[["話(はなし)", "이야기"]],"~になって: ~이 돼서"],
+[197.6,200.2,"ペアで一緒(いっしょ)に話(はな)してくださいみたいに言(い)われて","pea de issho ni hanashite kudasai mitai ni iwarete","짝지어 같이 이야기해 보라고 해서",[["一緒(いっしょ)に", "같이"], ["言(い)われる", "말을 듣다"]],"~てください: ~해 주세요"]
+]},
+"74Ez5cX-DSY~03":{v:"74Ez5cX-DSY",t:"hannah · 단기 어학연수 첫 등교날",s:"지쳐서 피자만 · 6:54~7:06 · 6문장",a:414,b:426,L:[
+[414.2,416.2,"今日(きょう)は初(はじ)めて学校(がっこう)に行(い)ったし","kyou wa hajimete gakkou ni itta shi","오늘은 처음 학교에 갔고",[["行(い)く", "가다"], ["今日(きょう)", "오늘"]],"~し: ~하고(이유 나열)"],
+[416.2,417.2,"自然(しぜん)も行(い)ったし","shizen mo itta shi","자연도 보러 갔고",[["自然(しぜん)", "자연"]],"~も: ~도"],
+[417.2,418.5,"結構(けっこう)疲(つか)れてたから","kekkou tsukarete ta kara","꽤 피곤해서",[["疲(つか)れる", "지치다"], ["結構(けっこう)", "꽤"]],"~から: ~니까"],
+[418.5,420.9,"もう何(なに)も喋(しゃべ)らずスマホを見(み)ないで","mou nani mo shaberazu sumaho o minaide","아무 말도 안 하고 휴대폰도 안 보고",[["喋(しゃべ)る", "말하다"], ["見(み)ないで", "안 보고"]],"~ないで: ~하지 않고"],
+[421.3,422.4,"ただただ食(た)べてた","tada tada tabete ta","그냥 계속 먹고 있었어",[["食(た)べる", "먹다"]],"~てた: ~하고 있었다"],
+[422.4,425.2,"このピザのチーズがすごくフレッシュで","kono piza no chiizu ga sugoku furesshu de","이 피자 치즈가 정말 신선해서",[["すごく", "정말"]],"~で: ~해서"]
+]},
+"74Ez5cX-DSY~04":{v:"74Ez5cX-DSY",t:"hannah · 단기 어학연수 첫 등교날",s:"일하기 좋은 카페 · 10:04~10:20 · 6문장",a:604,b:620,L:[
+[604.8,607.9,"なんかノマド用(よう)のカフェみたいなやつがないんだけど","nanka nomado you no kafe mitai na yatsu ga nai n da kedo","노마드용 카페 같은 건 별로 없는데",[["みたいな", "~같은"]],"~みたいな: ~같은"],
+[607.9,610.2,"ここは結構(けっこう)作業(さぎょう)しやすかったし","koko wa kekkou sagyou shiyasukatta shi","여기는 꽤 작업하기 편했고",[["作業(さぎょう)", "작업"]],"~しやすい: ~하기 편하다"],
+[610.2,612.9,"一人(ひとり)の人(ひと)もいっぱいいたからみんな入(はい)りやすいと思(おも)うし","hitori no hito mo ippai ita kara minna hairiyasui to omou shi","혼자 온 사람도 많아서 누구나 들어오기 편할 것 같고",[["一人(ひとり)", "혼자"], ["入(はい)る", "들어가다"]],"~やすい: ~하기 쉽다"],
+[612.9,614.8,"あと店員(てんいん)さんも優(やさ)しいので","ato ten'in san mo yasashii node","그리고 직원분도 친절해서",[["店員(てんいん)", "점원"], ["優(やさ)しい", "친절하다"]],"~ので: ~라서"],
+[614.8,616.7,"Googleでレビューしてって言(い)われて","guuguru de rebyuu shite tte iwarete","구글 리뷰 해 달라고 하셔서",[["言(い)われる", "말을 듣다"]],"~してって: ~해 달라고"],
+[616.7,619.5,"ちょっと後(あと)でやりますって言(い)って逃(に)げてきたんだけど","chotto ato de yarimasu tte itte nigete kita n da kedo","나중에 할게요 하고 살짝 도망쳐 왔어",[["後(あと)で", "나중에"], ["逃(に)げる", "도망치다"]],"~てきた: ~하고 왔다"]
+]},
+"74Ez5cX-DSY~05":{v:"74Ez5cX-DSY",t:"hannah · 단기 어학연수 첫 등교날",s:"오늘 산 것 · 12:27~12:36 · 5문장",a:747,b:756,L:[
+[747.5,749.3,"本当(ほんとう)にもうやばいやばいやばい","hontou ni mou yabai yabai yabai","진짜 큰일이다 큰일",[["本当(ほんとう)に", "정말"]],"やばい: 큰일·대박"],
+[749.3,751.0,"まずご飯(はん)食(た)べてからやるけど","mazu gohan tabete kara yaru kedo","일단 밥부터 먹고 할 건데",[["ご飯(はん)", "밥"], ["まず", "일단"]],"~てから: ~하고 나서"],
+[751.0,753.3,"その前(まえ)にちょっといろいろ今日(きょう)買(か)ったので紹介(しょうかい)します","sono mae ni chotto iroiro kyou katta node shoukai shimasu","그 전에 오늘 산 걸 좀 소개할게요",[["紹介(しょうかい)", "소개"], ["買(か)う", "사다"]],"~ので: ~니까"],
+[753.5,754.3,"まず1(ひと)つ目(め)","mazu hitotsume","첫 번째",[["1(ひと)つ目(め)", "첫 번째"]],"~つ目: ~번째"],
+[754.3,755.4,"バンドエイド","bando eido","밴드에이드",[["バンドエイド", "반창고"]],"외래어"]
+]},
+"74Ez5cX-DSY~06":{v:"74Ez5cX-DSY",t:"hannah · 단기 어학연수 첫 등교날",s:"좋아하는 맛 · 13:33~13:44 · 6문장",a:813,b:824,L:[
+[813.2,814.0,"まずこちら","mazu kochira","일단 이거",[["こちら", "이것(공손)"]],"まず: 먼저"],
+[814.3,817.0,"これは日本(にほん)の成城石井(せいじょういしい)とかにも","kore wa nihon no seijou ishii toka ni mo","이건 일본 세이조이시이 같은 데에도",[["日本(にほん)", "일본"]],"~とかにも: ~같은 데에도"],
+[817.0,818.4,"似(に)たやつが売(う)ってあって","nita yatsu ga utte atte","비슷한 게 팔고 있어서",[["似(に)る", "닮다"], ["売(う)る", "팔다"]],"~てあって: ~돼 있어서"],
+[818.7,820.0,"同(おな)じかわかんないけどでも","onaji ka wakannai kedo demo","같은 건지는 모르겠지만",[["同(おな)じ", "같은"]],"わかんない = わからない"],
+[820.0,821.9,"この味(あじ)がすごい好(す)きだから買(か)った","kono aji ga sugoi suki da kara katta","이 맛을 정말 좋아해서 샀어",[["味(あじ)", "맛"], ["好(す)き", "좋아함"]],"~だから: ~라서"],
+[821.9,823.1,"ココナッツウォーター","kokonattsu wootaa","코코넛 워터",[["ココナッツ", "코코넛"]],"외래어"]
+]},
+"74Ez5cX-DSY~07":{v:"74Ez5cX-DSY",t:"hannah · 단기 어학연수 첫 등교날",s:"매일 젤라또 · 15:07~15:16 · 5문장",a:907,b:916,L:[
+[907.4,909.2,"この時(とき)もフェリーにすごい人(ひと)がいた","kono toki mo ferii ni sugoi hito ga ita","이때도 페리에 사람이 엄청 많았어",[["時(とき)", "때"], ["人(ひと)", "사람"]],"~がいた: ~가 있었다(사람)"],
+[909.3,910.5,"またジェラート食(た)べてるね","mata jeraato tabete ru ne","또 젤라또 먹고 있네",[["また", "또"]],"~てるね: ~하고 있네"],
+[910.6,912.5,"もうジェラートは毎日(まいにち)食(た)べてた","mou jeraato wa mainichi tabete ta","젤라또는 정말 매일 먹었어",[["毎日(まいにち)", "매일"]],"~てた: ~하고 있었다"],
+[912.6,913.4,"本当(ほんとう)に美味(おい)しいから","hontou ni oishii kara","정말 맛있으니까",[["美味(おい)しい", "맛있다"]],"~から: ~니까"],
+[914.0,915.8,"その後(あと)寮(りょう)に帰(かえ)る時(とき)になんか","sono ato ryou ni kaeru toki ni nanka","그 뒤 기숙사로 돌아갈 때",[["帰(かえ)る", "돌아가다"]],"~時に: ~할 때"]
+]},
+"gD0blEhpyqo~01":{v:"gD0blEhpyqo",t:"hannah · 도쿄 다이어리 카페와 공원",s:"봄이 왔어 · 1:02~1:14 · 6문장",a:62,b:74,L:[
+[62.3,63.2,"こっちかな","kocchi ka na","이쪽인가",[["こっち", "이쪽"]],"~かな: ~일까"],
+[63.2,64.0,"こっちだ","kocchi da","이쪽이다",[["こっち", "이쪽"]],"~だ: ~다"],
+[66.5,67.4,"日(ひ)がめっちゃいい感(かん)じ","hi ga meccha ii kanji","햇살이 엄청 좋다",[["感(かん)じ", "느낌"]],"いい感じ: 좋은 느낌"],
+[67.4,68.9,"今日(きょう)はすごい天気(てんき)が良(い)いです","kyou wa sugoi tenki ga ii desu","오늘은 날씨가 엄청 좋아요",[["天気(てんき)", "날씨"]],"~が良いです: ~가 좋아요"],
+[68.9,71.7,"前(まえ)まですっごい寒(さむ)かったのに","mae made suggoi samukatta noni","전까지만 해도 엄청 추웠는데",[["寒(さむ)い", "춥다"]],"~のに: ~했는데"],
+[71.7,73.2,"突然(とつぜん)春(はる)が来(き)て","totsuzen haru ga kite","갑자기 봄이 와서",[["春(はる)", "봄"], ["突然(とつぜん)", "갑자기"]],"~て: ~해서"]
+]},
+"gD0blEhpyqo~02":{v:"gD0blEhpyqo",t:"hannah · 도쿄 다이어리 카페와 공원",s:"카페 찾기 · 2:14~2:24 · 4문장",a:134,b:144,L:[
+[134.8,136.9,"あ、こっちは何(なに)もないです","a, kocchi wa nani mo nai desu","아, 여긴 아무것도 없어요",[["何(なに)も", "아무것도"]],"何もない: 아무것도 없다"],
+[138.1,140.2,"私(わたし)が探(さが)している喫茶店(きっさてん)はどこにあるの","watashi ga sagashite iru kissaten wa doko ni aru no","내가 찾는 카페는 어디 있는 거야",[["探(さが)す", "찾다"], ["喫茶店(きっさてん)", "찻집"]],"どこにある: 어디 있다"],
+[140.7,141.5,"こっちかな","kocchi ka na","이쪽인가",[["こっち", "이쪽"]],"~かな: ~일까"],
+[142.4,143.3,"ここみたい","koko mitai","여기인 것 같아",[["みたい", "~인 것 같다"]],"~みたい: ~인 듯"]
+]},
+"gD0blEhpyqo~03":{v:"gD0blEhpyqo",t:"hannah · 도쿄 다이어리 카페와 공원",s:"조용한 찻집 · 2:46~2:57 · 5문장",a:166,b:177,L:[
+[166.7,169.0,"椿屋珈琲(つばきやこーひー)はいろんなところにある","tsubakiya koohii wa ironna tokoro ni aru","츠바키야 커피는 여기저기 있는",[["ところ", "곳"]],"いろんな: 여러"],
+[169.0,170.3,"チェーン店(てん)らしいんだけど","cheen ten rashii n da kedo","체인점이라는데",[["らしい", "~라고 한다"]],"~らしい: ~라고 한다"],
+[170.3,172.7,"私(わたし)はこの日(ひ)初(はじ)めて知(し)って行(い)ってみたの","watashi wa kono hi hajimete shitte itte mita no","나는 그날 처음 알고 가 봤어",[["知(し)る", "알다"], ["初(はじ)めて", "처음"]],"~てみた: ~해 봤다"],
+[173.4,175.5,"繁華街(はんかがい)にあるのにすごく落(お)ち着(つ)いてて","hankagai ni aru noni sugoku ochitsuite te","번화가에 있는데도 엄청 차분하고",[["落(お)ち着(つ)く", "차분하다"]],"~のに: ~인데도"],
+[175.5,176.9,"この空間(くうかん)が大好(だいす)きだった","kono kuukan ga daisuki datta","이 공간이 정말 좋았어",[["空間(くうかん)", "공간"], ["大好(だいす)き", "정말 좋아함"]],"~が大好き: ~가 정말 좋아"]
+]},
+"gD0blEhpyqo~04":{v:"gD0blEhpyqo",t:"hannah · 도쿄 다이어리 카페와 공원",s:"미팅에 늦을 뻔 · 4:31~4:42 · 5문장",a:271,b:282,L:[
+[271.6,273.2,"ケーキに夢中(むちゅう)になっていたら","keeki ni muchuu ni natte itara","케이크에 빠져 있다가",[["夢中(むちゅう)", "푹 빠짐"]],"~に夢中: ~에 빠짐"],
+[273.2,275.0,"打(う)ち合(あ)わせに遅(おく)れるかもしれない","uchiawase ni okureru kamo shirenai","미팅에 늦을지도 몰라",[["遅(おく)れる", "늦다"], ["打(う)ち合(あ)わせ", "회의"]],"~かもしれない: ~일지도 모른다"],
+[275.0,276.5,"ギリギリの時間(じかん)になっちゃって","girigiri no jikan ni nacchatte","아슬아슬한 시간이 돼 버려서",[["時間(じかん)", "시간"]],"~ちゃって: ~해 버려서"],
+[276.5,278.1,"急(いそ)いでタクシーを捕(つか)まえて","isoide takushii o tsukamaete","급하게 택시를 잡아서",[["急(いそ)ぐ", "서두르다"], ["捕(つか)まえる", "잡다"]],"~て: ~해서"],
+[279.3,281.5,"私(わたし)散歩(さんぽ)好(す)きだからいっぱい歩(ある)くんだけど","watashi sanpo suki da kara ippai aruku n da kedo","나는 산책을 좋아해서 많이 걷는데",[["散歩(さんぽ)", "산책"], ["歩(ある)く", "걷다"]],"~だから: ~라서"]
+]},
+"gD0blEhpyqo~05":{v:"gD0blEhpyqo",t:"hannah · 도쿄 다이어리 카페와 공원",s:"히비야 공원 · 8:15~8:29 · 5문장",a:495,b:509,L:[
+[495.4,497.6,"今日(きょう)日比谷公園(ひびやこうえん)に来(き)てて","kyou hibiya kouen ni kite te","오늘 히비야 공원에 와 있는데",[["公園(こうえん)", "공원"]],"~に来てて: ~에 와 있어서"],
+[497.6,500.4,"もうすごく趣(おもむき)のある場所(ばしょ)ですここ","mou sugoku omomuki no aru basho desu koko","여기 정말 분위기 있는 곳이에요",[["場所(ばしょ)", "장소"]],"~のある: ~가 있는"],
+[502.0,503.5,"日本(にほん)って感(かん)じだよね","nihon tte kanji da yo ne","완전 일본 느낌이지",[["感(かん)じ", "느낌"]],"~って感じ: ~라는 느낌"],
+[505.1,507.1,"もうちょっと高(たか)くしてみようかな","mou chotto takaku shite miyou ka na","조금 더 높여 볼까",[["高(たか)く", "높게"]],"~てみようかな: ~해 볼까"],
+[507.1,508.9,"今日(きょう)は曇(くも)りなんだけど","kyou wa kumori na n da kedo","오늘은 흐린 날인데",[["曇(くも)り", "흐림"]],"~なんだけど: ~인데"]
+]},
+"gD0blEhpyqo~06":{v:"gD0blEhpyqo",t:"hannah · 도쿄 다이어리 카페와 공원",s:"존댓말이 어려워 · 13:00~13:15 · 6문장",a:780,b:795,L:[
+[780.9,782.7,"社会人(しゃかいじん)の常識(じょうしき)を身(み)につけたいんですけど","shakaijin no joushiki o mi ni tsuketai n desu kedo","사회인 상식을 익히고 싶은데요",[["社会人(しゃかいじん)", "사회인"], ["常識(じょうしき)", "상식"]],"~たいんですけど: ~하고 싶은데요"],
+[782.7,784.2,"YouTubeとかで調(しら)べます","yuuchuubu toka de shirabemasu","유튜브 같은 데서 찾아봐요",[["調(しら)べる", "찾아보다"]],"~とかで: ~같은 데서"],
+[784.2,786.1,"普通(ふつう)に生活(せいかつ)してたら","futsuu ni seikatsu shite tara","평범하게 지내다 보면",[["生活(せいかつ)", "생활"]],"~たら: ~하면"],
+[788.6,791.3,"メールの返信(へんしん)とかも自分(じぶん)でやるんだけど","meeru no henshin toka mo jibun de yaru n da kedo","메일 답장도 내가 직접 하는데",[["自分(じぶん)で", "직접"], ["返信(へんしん)", "답장"]],"~んだけど: ~하는데"],
+[791.3,793.0,"敬語(けいご)とか本当(ほんとう)にわかんなくて","keigo toka hontou ni wakannakute","존댓말 같은 게 정말 어려워서",[["敬語(けいご)", "존댓말"]],"わかんなくて = わからなくて"],
+[793.0,794.7,"毎回(まいかい)毎回(まいかい)調(しら)べながら","maikai maikai shirabe nagara","매번 찾아보면서",[["毎回(まいかい)", "매번"]],"~ながら: ~하면서"]
+]},
+"gD0blEhpyqo~07":{v:"gD0blEhpyqo",t:"hannah · 도쿄 다이어리 카페와 공원",s:"반의 힘으로 · 16:18~16:30 · 6문장",a:978,b:990,L:[
+[978.2,981.3,"春(はる)は爽(さわ)やかだけど、疲(つか)れる季節(きせつ)でもある","haru wa sawayaka da kedo, tsukareru kisetsu demo aru","봄은 상쾌하지만 피곤한 계절이기도 해",[["季節(きせつ)", "계절"], ["疲(つか)れる", "지치다"]],"~でもある: ~이기도 하다"],
+[981.3,982.6,"ちゃんと寝(ね)れてる？","chanto nerete ru?","잘 자고 있어?",[["寝(ね)る", "자다"]],"~てる？: ~하고 있어?"],
+[982.9,985.5,"最初(さいしょ)から100パーセントじゃなくても大丈夫(だいじょうぶ)","saisho kara hyaku paasento ja nakute mo daijoubu","처음부터 100%가 아니어도 괜찮아",[["最初(さいしょ)", "처음"], ["大丈夫(だいじょうぶ)", "괜찮음"]],"~じゃなくても: ~가 아니어도"],
+[985.5,987.0,"半分(はんぶん)の力(ちから)で走(はし)ろう","hanbun no chikara de hashirou","반의 힘으로 달리자",[["半分(はんぶん)", "절반"], ["走(はし)る", "달리다"]],"~よう: ~하자"],
+[987.3,988.0,"よく寝(ね)て","yoku nete","푹 자고",[["寝(ね)る", "자다"]],"~て: ~하고"],
+[988.0,989.4,"ストレス発散(はっさん)してね","sutoresu hassan shite ne","스트레스 풀어",[["発散(はっさん)", "발산"]],"~してね: ~해"]
+]},
+"0jWS7Tbs6kc~01":{v:"0jWS7Tbs6kc",t:"hannah · 도쿄 집에서 보내는 하루",s:"집 브이로그 · 0:43~0:57 · 4문장",a:43,b:57,L:[
+[43.0,47.4,"そしたらもう2日(ふつか)しか出(で)てなくて5日間(いつかかん)ずっと家(いえ)にいたの","soshitara mou futsuka shika dete nakute itsukakan zutto ie ni ita no","그랬더니 이틀밖에 안 나가고 5일 내내 집에 있었어",[["家(いえ)", "집"], ["ずっと", "계속"]],"~しか~ない: ~밖에 안"],
+[47.4,49.4,"家(いえ)にいる時(とき)の方(ほう)が普段(ふだん)の私(わたし)だから","ie ni iru toki no hou ga fudan no watashi da kara","집에 있을 때가 평소의 나니까",[["普段(ふだん)", "평소"]],"~の方が: ~쪽이 더"],
+[49.6,52.1,"毎日(まいにち)外(そと)に出(で)てるわけじゃないから","mainichi soto ni dete ru wake ja nai kara","매일 밖에 나가는 것도 아니니까",[["外(そと)", "밖"], ["毎日(まいにち)", "매일"]],"~わけじゃない: ~인 건 아니다"],
+[52.1,56.9,"家(いえ)のVlog撮(と)ろうかなと思(おも)って","ie no vuroggu torou ka na to omotte","집 브이로그를 찍어 볼까 해서",[["撮(と)る", "찍다"]],"~ようかなと思って: ~할까 해서"]
+]},
+"0jWS7Tbs6kc~02":{v:"0jWS7Tbs6kc",t:"hannah · 도쿄 집에서 보내는 하루",s:"벌써 6월 · 2:59~3:16 · 5문장",a:179,b:196,L:[
+[179.8,182.2,"ここから2時間(にじかん)ぐらい編集(へんしゅう)してたかな","koko kara nijikan gurai henshuu shite ta ka na","여기서부터 2시간쯤 편집했나",[["編集(へんしゅう)", "편집"], ["時間(じかん)", "시간"]],"~ぐらい: ~쯤"],
+[184.1,186.9,"とか色々(いろいろ)してたらもうすぐ終(お)わっちゃう","toka iroiro shite tara mou sugu owacchau","이것저것 하다 보면 금방 끝나 버려",[["色々(いろいろ)", "이것저것"], ["終(お)わる", "끝나다"]],"~ちゃう: ~해 버리다"],
+[186.9,190.5,"もう6月(ろくがつ)、2026年(にせんにじゅうろくねん)の半分(はんぶん)が終(お)わったね","mou rokugatsu, nisen nijuuroku nen no hanbun ga owatta ne","벌써 6월, 2026년의 절반이 끝났네",[["半分(はんぶん)", "절반"]],"もう: 벌써"],
+[190.5,193.1,"みんな今年(ことし)の前半(ぜんはん)どうだった？","minna kotoshi no zenhan dou datta?","다들 올해 상반기 어땠어?",[["今年(ことし)", "올해"], ["前半(ぜんはん)", "전반"]],"どうだった？: 어땠어?"],
+[193.1,195.7,"私(わたし)は今年(ことし)の初(はじ)めはすごく良(よ)かった","watashi wa kotoshi no hajime wa sugoku yokatta","나는 올해 초가 정말 좋았어",[["初(はじ)め", "처음"]],"~かった: ~했다"]
+]},
+"0jWS7Tbs6kc~03":{v:"0jWS7Tbs6kc",t:"hannah · 도쿄 집에서 보내는 하루",s:"같이 성장하자 · 3:59~4:09 · 3문장",a:239,b:249,L:[
+[239.6,242.7,"これからも一緒(いっしょ)に成長(せいちょう)していけたらいいなって思(おも)ってる","kore kara mo issho ni seichou shite iketara ii na tte omotte ru","앞으로도 같이 성장해 나가면 좋겠다고 생각해",[["成長(せいちょう)", "성장"], ["一緒(いっしょ)に", "같이"]],"~たらいいな: ~하면 좋겠다"],
+[242.7,244.2,"私(わたし)の動画(どうが)を1(いち)から見(み)てたら","watashi no douga o ichi kara mite tara","내 영상을 처음부터 봤다면",[["動画(どうが)", "영상"]],"~たら: ~했다면"],
+[244.2,248.8,"成長(せいちょう)していく過程(かてい)が本当(ほんとう)にドキュメンタリーみたいに見(み)えてくると思(おも)う","seichou shite iku katei ga hontou ni dokyumentarii mitai ni miete kuru to omou","성장해 가는 과정이 정말 다큐멘터리처럼 보일 것 같아",[["過程(かてい)", "과정"], ["見(み)える", "보이다"]],"~みたいに: ~처럼"]
+]},
+"0jWS7Tbs6kc~04":{v:"0jWS7Tbs6kc",t:"hannah · 도쿄 집에서 보내는 하루",s:"오늘 할 일 · 6:23~6:32 · 4문장",a:383,b:392,L:[
+[383.3,386.4,"それがまだ終(お)わってないから絵(え)も描(か)かないといけない","sore ga mada owatte nai kara e mo kakanai to ikenai","그게 아직 안 끝나서 그림도 그려야 해",[["絵(え)", "그림"], ["描(か)く", "그리다"]],"~ないといけない: ~해야 한다"],
+[386.4,388.2,"最近(さいきん)ダイエットを始(はじ)めたので","saikin daietto o hajimeta node","요즘 다이어트를 시작해서",[["最近(さいきん)", "요즘"], ["始(はじ)める", "시작하다"]],"~ので: ~라서"],
+[388.2,389.5,"走(はし)らないといけない","hashiranai to ikenai","뛰어야 해",[["走(はし)る", "달리다"]],"~ないといけない: ~해야 한다"],
+[389.5,391.7,"もう今日(きょう)もやることがいっぱいある","mou kyou mo yaru koto ga ippai aru","오늘도 할 일이 많아",[["いっぱい", "가득"]],"やること: 할 일"]
+]},
+"0jWS7Tbs6kc~05":{v:"0jWS7Tbs6kc",t:"hannah · 도쿄 집에서 보내는 하루",s:"간장이랑 아보카도 · 10:09~10:17 · 4문장",a:609,b:617,L:[
+[609.5,612.8,"醤油(しょうゆ)とアボカドってなんであんなに美味(おい)しいんだろうね","shouyu to abokado tte nande anna ni oishii n darou ne","간장이랑 아보카도는 왜 그렇게 맛있을까",[["醤油(しょうゆ)", "간장"], ["美味(おい)しい", "맛있다"]],"なんで~んだろう: 왜 ~일까"],
+[612.8,614.9,"お寿司(すし)みたいな味(あじ)するよね","osushi mitai na aji suru yo ne","초밥 같은 맛 나지",[["寿司(すし)", "초밥"], ["味(あじ)", "맛"]],"~みたいな: ~같은"],
+[614.9,615.9,"美味(おい)しそう","oishisou","맛있겠다",[["美味(おい)しい", "맛있다"]],"~そう: ~해 보여"],
+[615.9,616.9,"どうしよう","dou shiyou","어떡하지",[["どうしよう", "어떡하지"]],"どうしよう"]
+]},
+"0jWS7Tbs6kc~06":{v:"0jWS7Tbs6kc",t:"hannah · 도쿄 집에서 보내는 하루",s:"운동한 날 저녁 · 16:55~17:01 · 3문장",a:1015,b:1021,L:[
+[1015.7,1017.0,"運動(うんどう)した後(あと)はたくさん食(た)べる","undou shita ato wa takusan taberu","운동한 뒤에는 많이 먹어",[["運動(うんどう)", "운동"], ["たくさん", "많이"]],"~た後は: ~한 뒤에는"],
+[1017.1,1018.9,"家族(かぞく)とお話(はなし)しながらご飯(はん)を食(た)べてたら","kazoku to ohanashi shi nagara gohan o tabete tara","가족이랑 이야기하면서 밥을 먹다 보니",[["家族(かぞく)", "가족"]],"~ながら: ~하면서"],
+[1018.9,1020.4,"もうすぐ食(た)べ終(お)わっちゃう","mou sugu tabeowacchau","벌써 다 먹어 가",[["食(た)べ終(お)わる", "다 먹다"]],"~ちゃう: ~해 버리다"]
+]},
+"tSJd-o7Tay8~01":{v:"tSJd-o7Tay8",t:"hannah · 도쿄 원룸 방 꾸미기",s:"침대 위치 · 0:08~0:20 · 4문장",a:8,b:20,L:[
+[8.0,13.3,"私(わたし)の部屋(へや)を見(み)たことある方(かた)なら分(わ)かると思(おも)うんだけど","watashi no heya o mita koto aru kata nara wakaru to omou n da kedo","내 방 본 적 있는 분이라면 알 것 같은데",[["部屋(へや)", "방"], ["分(わ)かる", "알다"]],"~たことある: ~한 적 있다"],
+[13.3,15.0,"ベッドの場所(ばしょ)をちょっと変(か)えたの","beddo no basho o chotto kaeta no","침대 위치를 좀 바꿨어",[["場所(ばしょ)", "장소"], ["変(か)える", "바꾸다"]],"~を変えた: ~를 바꿨다"],
+[15.0,18.5,"今(いま)まで壁沿(かべぞ)いにこういう風(ふう)に置(お)いてたんだけど","ima made kabezoi ni kou iu fuu ni oite ta n da kedo","원래는 벽 쪽에 이렇게 두었는데",[["置(お)く", "두다"], ["壁(かべ)", "벽"]],"今まで: 지금까지"],
+[18.5,19.9,"こっちにしました","kocchi ni shimashita","이쪽으로 했어요",[["こっち", "이쪽"]],"~にしました: ~로 했어요"]
+]},
+"tSJd-o7Tay8~02":{v:"tSJd-o7Tay8",t:"hannah · 도쿄 원룸 방 꾸미기",s:"가구 고르기 · 1:04~1:14 · 2문장",a:64,b:74,L:[
+[64.8,69.4,"すっごい悩(なや)んじゃって、もう2(に)ヶ月(かげつ)ぐらい悩(なや)んでた気(き)がする","suggoi nayanjatte, mou nikagetsu gurai nayande ta ki ga suru","엄청 고민해서 두 달쯤 고민했던 것 같아",[["悩(なや)む", "고민하다"]],"~気がする: ~한 것 같다"],
+[69.4,73.4,"それぐらいなんか家具(かぐ)を選(えら)ぶのってすごいめんどくさいし大変(たいへん)じゃん","sore gurai nanka kagu o erabu no tte sugoi mendokusai shi taihen jan","그만큼 가구 고르는 건 정말 귀찮고 힘들잖아",[["家具(かぐ)", "가구"], ["選(えら)ぶ", "고르다"]],"~じゃん: ~잖아"]
+]},
+"tSJd-o7Tay8~03":{v:"tSJd-o7Tay8",t:"hannah · 도쿄 원룸 방 꾸미기",s:"한국어 설명서 · 3:25~3:33 · 2문장",a:205,b:213,L:[
+[205.4,209.4,"なんか色々(いろいろ)やり方(かた)が書(か)いてあるんですけど、韓国語(かんこくご)で分(わ)かりません","nanka iroiro yarikata ga kaite aru n desu kedo, kankokugo de wakarimasen","사용법이 적혀 있는데 한국어라서 모르겠어요",[["やり方(かた)", "하는 법"], ["韓国語(かんこくご)", "한국어"]],"~てある: ~돼 있다"],
+[209.4,211.1,"翻訳機(ほんやくき)を使(つか)います","hon'yakuki o tsukaimasu","번역기를 쓸게요",[["使(つか)う", "쓰다"]],"~を使います: ~를 써요"]
+]},
+"tSJd-o7Tay8~04":{v:"tSJd-o7Tay8",t:"hannah · 도쿄 원룸 방 꾸미기",s:"바닥에 앉고 싶어 · 5:52~6:04 · 3문장",a:352,b:364,L:[
+[352.6,358.2,"私(わたし)の実家(じっか)はもう全部(ぜんぶ)ダイニングテーブルで、この床(ゆか)に座(すわ)る文化(ぶんか)がないの","watashi no jikka wa mou zenbu dainingu teeburu de, kono yuka ni suwaru bunka ga nai no","우리 집은 전부 식탁이라 바닥에 앉는 문화가 없어",[["実家(じっか)", "본가"], ["座(すわ)る", "앉다"]],"~がない: ~가 없다"],
+[358.2,359.7,"もう全部(ぜんぶ)高(たか)いのだから","mou zenbu takai no da kara","다 높은 거라서",[["全部(ぜんぶ)", "전부"]],"~だから: ~라서"],
+[359.7,363.4,"床(ゆか)に座(すわ)るっていうのに憧(あこが)れがあって","yuka ni suwaru tte iu no ni akogare ga atte","바닥에 앉는 데 로망이 있어서",[["憧(あこが)れ", "동경"], ["床(ゆか)", "바닥"]],"~っていう: ~라는"]
+]},
+"tSJd-o7Tay8~05":{v:"tSJd-o7Tay8",t:"hannah · 도쿄 원룸 방 꾸미기",s:"머그컵 하나 · 8:30~8:39 · 3문장",a:510,b:519,L:[
+[510.4,514.8,"こういうマグカップが1(ひと)つは欲(ほ)しくて","kou iu magukappu ga hitotsu wa hoshikute","이런 머그컵 하나는 갖고 싶어서",[["欲(ほ)しい", "갖고 싶다"]],"~が欲しい: ~를 갖고 싶다"],
+[514.8,517.4,"テーブルにあるだけでテンションが上(あ)がりそうだなと思(おも)って","teeburu ni aru dake de tenshon ga agarisou da na to omotte","테이블에 있기만 해도 기분이 좋아질 것 같아서",[["上(あ)がる", "오르다"]],"~だけで: ~만으로"],
+[517.4,518.6,"これ買(か)ってみた","kore katte mita","이거 사 봤어",[["買(か)う", "사다"]],"~てみた: ~해 봤다"]
+]},
+"tSJd-o7Tay8~06":{v:"tSJd-o7Tay8",t:"hannah · 도쿄 원룸 방 꾸미기",s:"이 방이라 다행 · 13:09~13:16 · 4문장",a:789,b:796,L:[
+[789.1,791.5,"そういった感(かん)じですごい私(わたし)は満足(まんぞく)です","sou itta kanji de sugoi watashi wa manzoku desu","그런 느낌으로 나는 정말 만족해요",[["満足(まんぞく)", "만족"]],"そういった: 그런"],
+[791.5,793.2,"この部屋(へや)になってよかった","kono heya ni natte yokatta","이 방이 돼서 다행이야",[["部屋(へや)", "방"]],"~てよかった: ~해서 다행이다"],
+[793.2,793.8,"嬉(うれ)しい","ureshii","기뻐",[["嬉(うれ)しい", "기쁘다"]],"嬉しい"],
+[794.4,795.8,"ちょっと寝(ね)ます","chotto nemasu","좀 누울게요",[["寝(ね)る", "자다·눕다"]],"~ます: ~할게요"]
+]},
+"nRTg-BvCY5k~01":{v:"nRTg-BvCY5k",t:"hannah · 태국에서 산 것",s:"일본보다 반값 · 3:29~3:38 · 2문장",a:209,b:218,L:[
+[209.3,213.4,"Amazonとかで買(か)ったら2000(にせん)、3000円(さんぜんえん)の値段(ねだん)だったの","amazon toka de kattara nisen, sanzen en no nedan datta no","아마존에서 사면 2천~3천 엔 하는 가격이었어",[["値段(ねだん)", "가격"], ["買(か)う", "사다"]],"~たら: ~하면"],
+[213.4,217.9,"だから、もうそれを見(み)た瞬間(しゅんかん)に、あ、これ買(か)わなきゃいけないと思(おも)って","dakara, mou sore o mita shunkan ni, a, kore kawanakya ikenai to omotte","그래서 그걸 본 순간 아, 이건 사야 해 싶어서",[["瞬間(しゅんかん)", "순간"]],"~なきゃいけない: ~해야 한다"]
+]},
+"nRTg-BvCY5k~02":{v:"nRTg-BvCY5k",t:"hannah · 태국에서 산 것",s:"너무 많이 샀나 · 4:08~4:20 · 2문장",a:248,b:260,L:[
+[248.7,252.8,"ちょっとさすがに買(か)いすぎたかもしれない","chotto sasuga ni kaisugita kamo shirenai","좀 너무 많이 산 것 같아",[["買(か)いすぎる", "너무 많이 사다"]],"~すぎた: 너무 ~했다"],
+[256.5,259.7,"これさ、パッと見(み)のり玉(たま)みたいじゃない？","kore sa, patto mi noritama mitai ja nai?","이거 딱 보면 노리타마 같지 않아?",[["見(み)る", "보다"]],"~みたいじゃない？: ~같지 않아?"]
+]},
+"nRTg-BvCY5k~03":{v:"nRTg-BvCY5k",t:"hannah · 태국에서 산 것",s:"왜 일본만 · 5:23~5:34 · 4문장",a:323,b:334,L:[
+[323.9,326.5,"え、なんで日本(にほん)だけこんなにないのって感(かん)じ","e, nande nihon dake konna ni nai no tte kanji","왜 일본만 이렇게 없나 싶어",[["日本(にほん)", "일본"], ["だけ", "~만"]],"なんで~の: 왜 ~야"],
+[326.5,330.1,"日本(にほん)ってさ、やっぱ夏(なつ)のお祭(まつ)りの時(とき)しかやらないじゃん","nihon tte sa, yappa natsu no omatsuri no toki shika yaranai jan","일본은 역시 여름 축제 때만 하잖아",[["夏(なつ)", "여름"], ["お祭(まつ)り", "축제"]],"~しか~ない: ~밖에 안"],
+[330.1,332.3,"法的(ほうてき)なものが絡(から)んでんのかな","houteki na mono ga karanden no ka na","법적인 게 얽혀 있나",[["法的(ほうてき)", "법적"]],"~のかな: ~인가"],
+[332.3,333.6,"道(みち)でやっちゃダメ","michi de yaccha dame","길에서 하면 안 된다",[["道(みち)", "길"]],"~ちゃダメ: ~하면 안 돼"]
+]},
+"nRTg-BvCY5k~04":{v:"nRTg-BvCY5k",t:"hannah · 태국에서 산 것",s:"건강 챙겨 · 17:59~18:08 · 3문장",a:1079,b:1088,L:[
+[1079.1,1081.9,"じゃあ私(わたし)は今(いま)からお仕事(しごと)をするので","jaa watashi wa ima kara oshigoto o suru node","그럼 저는 지금부터 일할 거라서",[["仕事(しごと)", "일"]],"今から: 지금부터"],
+[1081.9,1084.5,"みんなも気(き)をつけて、体(からだ)に気(き)をつけて","minna mo ki o tsukete, karada ni ki o tsukete","다들 조심하고 건강 챙기고",[["気(き)をつける", "조심하다"], ["体(からだ)", "몸"]],"~に気をつけて: ~조심해"],
+[1084.5,1087.1,"ご飯(はん)食(た)べてお水(みず)しっかり飲(の)んで","gohan tabete omizu shikkari nonde","밥 먹고 물 잘 마시고",[["飲(の)む", "마시다"], ["しっかり", "제대로"]],"~て~て: ~하고 ~하고"]
 ]}};
 const $=id=>document.getElementById(id);
 const RX=/([0-9一-龯々]+)\(([ぁ-んー]+)\)/g;
@@ -1247,13 +1442,20 @@ function renderList(){document.body.classList.add('list');['p-intro','p-lines','
  P.onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;location.hash=(+b.dataset.n>1)?'V:'+b.dataset.v:b.dataset.first};}
 if(LIST){renderList()}else{
 /* R67 2026-11-21: 문장 2~3개(약 10초)를 한 카드로 묶음 · 장면당 카드 3개 안팎 */
-function groupLines(src){const out=[];let g=null;
- for(const l of src){if(g&&(g.n>=3||l[1]-g.l[0]>12)){out.push(g.l);g=null}
+/* R76 2026-11-26: 카드 = 자막상 연속 10~15초 · 문장 2개 이상 · 중간을 건너뛰지 않고 그대로 재생 */
+function groupLines(src){const out=[];let g=null;const close=()=>{if(g)out.push(g.l);g=null};
+ for(const l of src){
+  if(g){const span=g.l[1]-g.l[0];const nextEnd=l[1]-g.l[0];if(g.n>=6||nextEnd>15||(g.n>=2&&span>=10))close()}
   if(!g){g={n:1,l:[l[0],l[1],l[2],l[3],l[4],[...l[5]],l[6],[[l[0],l[1],l[2],l[3],l[4]]]]};continue}
   g.n++;const x=g.l;x[7].push([l[0],l[1],l[2],l[3],l[4]]);x[1]=l[1];x[2]+=' '+l[2];x[3]+=' '+l[3];x[4]+=' '+l[4];l[5].forEach(w=>{if(x[5].length<5&&!x[5].some(y=>y[0]===w[0]))x[5].push(w)});if(l[6]&&!x[6].includes(l[6]))x[6]+=' / '+l[6]}
- if(g)out.push(g.l);return out}
-const sceneId=HASH;const S=SCENES[sceneId]||SCENES[Object.keys(SCENES)[0]], L=groupLines(S.L);const vidId=S.v||sceneId;
-const KEY='jpscene2.'+sceneId, DAY=864e5, IV=[1,3,7,14,30];
+ close();
+ /* 끝에 남은 짧은 카드(6초 미만)는 앞 카드에 붙임(합쳐 20초 이하일 때) */
+ while(out.length>1){const z=out[out.length-1],y=out[out.length-2];if(z[1]-z[0]>=6||z[1]-y[0]>20)break;out.pop();y[7]=y[7].concat(z[7]);y[1]=z[1];y[2]+=' '+z[2];y[3]+=' '+z[3];y[4]+=' '+z[4];z[5].forEach(w=>{if(y[5].length<5&&!y[5].some(q=>q[0]===w[0]))y[5].push(w)});if(z[6]&&!y[6].includes(z[6]))y[6]+=' / '+z[6]}
+ /* 10초보다 짧은 카드는 영상을 이어서 틀어 10초를 채움(다음 카드 시작 전까지 · 마지막 카드는 장면 뒤로 이어서) */
+ out.forEach((x,i)=>{const lim=i+1<out.length?out[i+1][0]-0.2:x[0]+10;if(x[1]<x[0]+10)x[1]=Math.max(x[1],Math.min(x[0]+10,lim))});
+ return out}
+const sceneId=HASH;const S=SCENES[sceneId]||SCENES[Object.keys(SCENES)[0]];const S0=S;const L=groupLines(S.L);const vidId=S.v||sceneId;
+const KEY='jpscene3.'+sceneId, DAY=864e5, IV=[1,3,7,14,30];
 /* 기록 받는 주소(구글 Apps Script 웹 앱). 비어 있으면 기록을 폰에 모아 두었다가 주소가 생기면 한꺼번에 보냄 */
 const ENDPOINT='https://script.google.com/macros/s/AKfycbyExkEh-f8MVxlYVNqh_TGXxmmWKblC1PKfJp8IUs_fA4RrLO6Pl09x_meunSPFrL60/exec';
 let st={i:0,m:{},hide:{ko:false,ro:false,fu:false,ja:false},visits:0,taps:{},saved:{},due:{},str:{},ks:{},q:[]};
@@ -1318,10 +1520,10 @@ function render(){const l=L[st.i];
  $('prev').disabled=st.i===0;$('next').textContent=st.i===L.length-1?'마무리 ›':'다음 ›';
  $('ok').classList.toggle('sel-ok',st.m[st.i]==='ok');$('again').classList.toggle('sel-again',st.m[st.i]==='again');
  $('errlink').href=`https://www.youtube.com/watch?v=${vidId}&t=${Math.floor(l[0])}s`;
- applyHide();
+ applyHide();renderGate();
 }
 /* 노래방 불빛 */
-function lit(p){const us=[...$('ja').querySelectorAll('.u')];if(!us.length)return;const tot=us.reduce((a,u)=>a+(+u.dataset.w||1),0);let acc=0;const lim=Math.max(0,Math.min(1,p))*tot;us.forEach(u=>{acc+=(+u.dataset.w||1);u.classList.toggle('lit',acc<=lim+0.5)})}
+function lit(p){/* R76: 글자 불빛 없앰 · 들리는 문장만 진하게(자막 시각 기준) */}
 function clearLit(){document.querySelectorAll('#ja .u.lit').forEach(u=>u.classList.remove('lit'));const j=$('ja');if(j){j.classList.remove('playing');j.querySelectorAll('.sn.cur').forEach(e=>e.classList.remove('cur'))}}
 function playLine(cb){const l=L[st.i];litOn=true;seg(Math.max(0,l[0]-0.15),l[1]+0.25,cb)}
 $('play').onclick=()=>{stopAuto();clearTimeout(preTimer);
@@ -1338,6 +1540,22 @@ function go(k){stopSeg();clearTimeout(preTimer);leaveLine();flush();
  st.i=Math.max(0,k);plays=0;autoHide();
  if(st.due[st.i]&&st.due[st.i]<=Date.now()){const b=(st.dueBox||{})[st.i]||0;st.dueBox=Object.assign({},st.dueBox,{[st.i]:b+1});st.due[st.i]=Date.now()+IV[Math.min(b+1,4)]*DAY}
  save();$('exd').open=false;render()}
+/* R76 2026-11-26: 말해 보기 관문 — 뜻을 보고 핵심 낱말을 로마자로 쳐야 다음 카드로(소리 없이도 머리에서 꺼내 보기) */
+const normR=s=>String(s||'').toLowerCase().replace(/[^a-z]/g,'').replace(/ou/g,'o').replace(/oo/g,'o').replace(/uu/g,'u').replace(/aa/g,'a').replace(/ii/g,'i').replace(/ee/g,'e').replace(/si/g,'shi').replace(/ti/g,'chi').replace(/tu/g,'tsu').replace(/hu/g,'fu').replace(/zi/g,'ji').replace(/nn/g,'n');
+function lev(a,b){const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]}
+function gateKey(l){const ws=l[5]||[];let w=ws.find(([x])=>x.replace(RX,'$2').length>=2)||ws[0];if(!w)return null;const kana=w[0].replace(RX,'$2');return {ja:w[0],ko:w[1],kana,ro:romWord(kana)}}
+let gateShown=false;
+function renderGate(){const l=L[st.i];const g=gateKey(l);const box=$('gate');st.gate=st.gate||{};
+ if(!g){box.hidden=true;$('next').disabled=false;return}box.hidden=false;gateShown=false;
+ const done=!!st.gate[st.i];box.classList.toggle('done',done);$('next').disabled=!done;
+ $('gq').innerHTML=`「<b>${g.ko}</b>」 이 문장에서 이 말을 로마자로 쳐 보기`;$('gin').value=done?g.ro:'';$('gin').disabled=done;$('gok').disabled=done;
+ $('gh').textContent=done?`✓ ${g.ro} · ${plain(g.ja)}`:'';$('gno').hidden=done;}
+function gateCheck(){const l=L[st.i];const g=gateKey(l);if(!g)return;const a=normR($('gin').value),b=normR(g.ro);if(!a)return;
+ const okk=a===b||(b.length>=5&&lev(a,b)<=1);logEv('gate',st.i,g.ro,okk?1:0,$('gin').value+(gateShown?';shown':''));
+ if(okk){st.gate=Object.assign({},st.gate,{[st.i]:1});if(!gateShown)bump(st.i,1);save();renderGate();if(auto)$('pre').textContent='지하철 자동 · 다음 카드로';}
+ else{$('gh').textContent='조금 달라요 · 소리를 한 번 더 듣고 다시 쳐 봐요';}}
+$('gok').onclick=gateCheck;$('gin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();gateCheck()}});
+$('gno').onclick=()=>{const g=gateKey(L[st.i]);if(!g)return;gateShown=true;bump(st.i,-1);$('gh').textContent=`답: ${g.ro} (${plain(g.ja)}) · 보고 한 번 쳐 봐요`;$('gin').focus()};
 $('prev').onclick=()=>{stopAuto();go(st.i-1)};
 $('next').onclick=()=>{stopAuto();go(st.i+1)};
 $('chips').onclick=e=>{const c=e.target.closest('.chip');if(!c)return;st.hide[c.dataset.h]=!st.hide[c.dataset.h];save();applyHide()};
@@ -1358,7 +1576,7 @@ $('ja').addEventListener('click',e=>{if(st.hide.ja)return;const kt=e.target.clos
  const rc=target.getBoundingClientRect();if(tipEl)tipEl.remove();tipEl=document.createElement('div');tipEl.className='tip';tipEl.textContent=r;tipEl.style.left=(rc.left+rc.width/2)+'px';tipEl.style.top=rc.top+'px';document.body.appendChild(tipEl);const me=tipEl;setTimeout(()=>me.remove(),1400)});
 /* 카드 밀기 */
 let x0=null;$('cur').addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
-$('cur').addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>60){stopAuto();go(st.i+(dx<0?1:-1))}});
+$('cur').addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>60){if(dx<0&&$('next').disabled){$('gin').focus();return}stopAuto();go(st.i+(dx<0?1:-1))}});
 /* 지하철 자동 */
 function stopAuto(){if(!auto)return;auto=false;autoTok++;$('auto').classList.remove('on');$('auto').setAttribute('aria-pressed','false');$('pre').textContent=''}
 const playP=()=>new Promise(r=>{playLine(r)});
@@ -1367,6 +1585,7 @@ async function runAuto(tok){
   const s=strOf(st.i),reps=s<=1?3:s===2?2:1;
   for(let rep=0;rep<reps;rep++){if(tok!==autoTok)return;plays++;$('pre').textContent=`지하철 자동 · ${rep===0?'듣기':'한 번 더'} ${rep+1}/${reps}`;await playP();if(tok!==autoTok)return;$('pre').textContent='지하철 자동 · 속으로 따라 하기 3초';await sleep(3000)}
   if(tok!==autoTok)return;
+  if($('next').disabled){$('pre').textContent='지하철 자동 · 아래 칸에 로마자를 쳐야 다음으로 가요';while(tok===autoTok&&$('next').disabled)await sleep(400);if(tok!==autoTok)return}
   if(st.i>=L.length-1){stopAuto();toEnd();return}
   go(st.i+1)}
 }
@@ -1376,6 +1595,7 @@ $('auto').onclick=()=>{if(auto){stopAuto();stopSeg();return}auto=true;autoTok++;
 let endQ=[],eStep=0,eIdx=0;
 function sceneKana(){const c={};L.forEach(l=>{[...plain(l[2])].forEach(ch=>{if(/[ぁ-ゖァ-ヶ]/.test(ch)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッをん'.includes(ch))c[ch]=(c[ch]||0)+1})});return c}
 function pickKana(){const tapped=Object.entries(st.ks).filter(x=>x[1]<0).sort((a,b)=>a[1]-b[1]).map(x=>x[0]);const all=Object.keys(sceneKana());const tgt=all.filter(k=>kState(k)==='target');const out=[...new Set(tapped.concat(tgt.sort(()=>Math.random()-.5)))].slice(0,3);for(const k of all.sort(()=>Math.random()-.5)){if(out.length>=3)break;if(!out.includes(k))out.push(k)}return {out,all,fromTap:tapped.length>0}}
+function home3(raw){const src=[];L.forEach((l,k)=>{(l[7]||[[l[0],l[1],l[2],l[3],l[4]]]).forEach(x=>src.push({x,ok:st.m[k]==='ok'}))});src.sort((a,b)=>(b.ok-a.ok));const pick=src.filter(s=>plain(s.x[2]).length>=4).slice(0,3);return pick.map(s=>raw?`${plain(s.x[2])} (${s.x[3]})`:`${plain(s.x[2])}<br><span style="color:var(--ink3)">${s.x[3]} · ${s.x[4]}</span>`).join(raw?'\n':'<br>')}
 function toEnd(){stopSeg();setCover(false);logEv("end",-1,"ok",L.filter((_,k)=>st.m[k]==="ok").length);flush();const p=pickKana();endQ=p.out;window.__kpool=p.all;eStep=0;eIdx=0;show('end');renderEnd()}
 function renderEnd(){const c=$('endCard');
  if(eStep===0){const k=endQ[eIdx];const right=romUnit(k);const pool=[...new Set(window.__kpool.map(romUnit))].filter(r=>r!==right).sort(()=>Math.random()-.5).slice(0,3);const opts=[right,...pool].sort(()=>Math.random()-.5);
@@ -1395,8 +1615,8 @@ function renderEnd(){const c=$('endCard');
   $('eWhole').onclick=()=>{setCover(true);$('eWhole').textContent='보는 중';seg(S.a,S.b,()=>{setCover(false);eStep=3;renderEnd()})};
   $('eNext').onclick=()=>{stopSeg();setCover(false);eStep=3;renderEnd()};return}
  const ok=L.filter((_,k)=>st.m[k]==='ok').length;const saved=Object.keys(st.saved).length;
- c.innerHTML=`<p class="step-h">끝</p><p class="big">입에 붙은 문장</p><div class="cnt">${ok}<span style="font-size:var(--fs-3);color:var(--ink3)"> / ${L.length}개</span></div><p class="sub">${saved?`담아 둔 말 ${saved}개는 내일부터 이 장면을 열면 먼저 나와요`:'다시 볼 말은 내일 이 장면을 열면 먼저 나와요'}</p><div class="gap"></div><button class="btn pri wide" id="eAgain">문장으로 돌아가기</button><div class="gap"></div><button class="btn wide" id="eTop">처음부터</button>`;
- $('eAgain').onclick=()=>{show('lines');go(0)};$('eTop').onclick=()=>{st.i=0;save();show('intro')};
+ c.innerHTML=`<p class="step-h">끝</p><p class="big">입에 붙은 문장</p><div class="cnt">${ok}<span style="font-size:var(--fs-3);color:var(--ink3)"> / ${L.length}개</span></div><p class="sub">${saved?`담아 둔 말 ${saved}개는 내일부터 이 장면을 열면 먼저 나와요`:'다시 볼 말은 내일 이 장면을 열면 먼저 나와요'}</p><div class="gap"></div><div class="gate"><p class="gq"><b>집에서 1분</b> · ChatGPT 음성 모드로 이 장면 말 3개를 소리 내어 써 봐요</p><p class="gh" id="hm3">${home3()}</p><button class="btn sm wide" id="hmCopy">ChatGPT에 붙일 글 복사</button></div><div class="gap"></div><button class="btn pri wide" id="eAgain">문장으로 돌아가기</button><div class="gap"></div><button class="btn wide" id="eTop">처음부터</button>`;
+ $('hmCopy').onclick=()=>{const txt=`일본어 초보야. 아래 일본어 문장 3개를 내가 소리 내어 말할게. 한 문장씩 내가 말하면 발음과 자연스러움을 짧게 고쳐 주고, 그 문장을 써서 나한테 쉬운 질문 하나만 해 줘. 1분 안에 끝내자.\n${home3(true)}`;try{navigator.clipboard.writeText(txt);$('hmCopy').textContent='복사했어요 · ChatGPT 음성 모드에 붙여요'}catch(e){$('hmCopy').textContent='복사가 안 돼요 · 위 문장을 길게 눌러 복사'}logEv('home',-1,'copy',1)};$('eAgain').onclick=()=>{show('lines');go(0)};$('eTop').onclick=()=>{st.i=0;save();show('intro')};
 }
 render();
 window.__scene={L,st,get plays(){return plays},get player(){return player},get auto(){return auto},romWord,lineHtml};
