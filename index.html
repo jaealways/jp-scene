@@ -71,7 +71,7 @@ body.list .box{display:none}
 .ja ruby{ruby-align:center}.ja rt{font-size:var(--fs-5);font-weight:400;color:var(--ink3);letter-spacing:-.08em}
 .ja.nofu rt{visibility:hidden}
 .ja rt{font-size:var(--fs-5)}
-.ja .s-known rt{display:none}
+/* 2026-11-26 R74: 익힌 글자도 로마자 늘 보임 */
 .ja .s-target{color:var(--warn)}
 .ja .s-target rt{color:var(--warn);font-weight:600}
 .ja .s-later rt{color:var(--ink3)}
@@ -1169,7 +1169,7 @@ function kWeekChars(){const g=KW%KG.length;const r=KG[g].replace(/[ゃゅょっ�
 const rtRom=u=>{const h=[...u].map(toH).join('');return h==='っ'?'·':h==='ー'?'—':romUnit(u)};
 /* 문장 → 가나 먼저 HTML: 한자는 읽기 가나로 바꿔 보여 줌 */
 function kanaHtml(s){const kana=s.replace(RX,'$2');const tk=[];
- for(const u of units([...kana])){if(isKana(u[0])){const stt=kState(u[0]);const r=rtRom(u);tk.push(`<ruby class="u k s-${stt}" data-w="1" data-r="${romUnit(u)}">${u}<rt>${stt==='known'?'':r}</rt></ruby>`)}
+ for(const u of units([...kana])){if(isKana(u[0])){const stt=kState(u[0]);const r=rtRom(u);tk.push(`<ruby class="u k s-${stt}" data-w="1" data-r="${romUnit(u)}">${u}<rt>${r}</rt></ruby>`)}
   else if(/^[。、，．？！?!,.」』）)…ー]+$/.test(u)&&tk.length&&!/^\s+$/.test(tk[tk.length-1]))tk[tk.length-1]=`<span class="nb">${tk[tk.length-1]}${u}</span>`;
   else if(/^\s+$/.test(u))tk.push('<br>');
   else tk.push(/[0-9A-Za-z]/.test(u)?`<span class="u" data-w="1">${u}</span>`:u)}
@@ -1332,7 +1332,7 @@ let lineTaps=0;
 function leaveLine(){const i=st.i;if(!plays&&!lineTaps)return;const lv=ORDER.filter(x=>st.hide[x]).length;
  if(!auto){if(plays>=4||(lineTaps>=2&&lv<2))bump(i,-1);else if(lv>=2&&plays<=2)bump(i,1);}
  st.seen=Object.assign({},st.seen,{[i]:1});logEv('line',i,'plays',plays,`hide=${lv};taps=${lineTaps};str=${strOf(i)}`);lineTaps=0}
-function autoHide(){const s=strOf(st.i);st.hide={ko:s>=2,ro:s>=3,fu:s>=3,ja:false}}
+function autoHide(){const s=strOf(st.i);st.hide={ko:s>=2,ro:false,fu:s>=3,ja:false}}
 function go(k){stopSeg();clearTimeout(preTimer);leaveLine();flush();
  if(k>=L.length){toEnd();return}
  st.i=Math.max(0,k);plays=0;autoHide();
