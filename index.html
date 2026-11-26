@@ -56,7 +56,18 @@ body.list .box{display:none}
 .chip{min-height:40px;padding:0 var(--s4);border-radius:var(--r-pill);background:var(--band);font-size:var(--fs-5);color:var(--ink2)}
 .chip.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--ink3);text-decoration:line-through}
 .no{font-size:var(--fs-5);color:var(--ink3);display:flex;justify-content:space-between}
-.ja{font-size:var(--fs-1);font-weight:600;line-height:2.1;margin:var(--s2) 0 0;word-break:keep-all;overflow-wrap:anywhere}
+.ja{font-size:var(--fs-1);font-weight:600;line-height:2.1;margin:var(--s2) 0 0;word-break:normal;line-break:strict;overflow-wrap:anywhere;max-width:100%}
+.ja .nb{white-space:nowrap}
+/* 2026-11-26 R73 화면: 문장마다 한 덩어리 · 낱말 띄어쓰기 · 낱말 위 로마자 · 문장 밑 뜻 · 재생 중인 문장만 진하게 */
+.ja .sn{margin:0 0 var(--s4)}.ja .sn:last-child{margin-bottom:0}
+.ja .jl{line-height:2.35}
+.ja .w{margin-right:.34em;white-space:nowrap}
+.ja .nb .w{margin-right:0}.ja .nb{margin-right:.34em}
+.ja + .orig{margin-top:var(--s3)}
+.ja .w rt{font-size:var(--fs-5);font-weight:400;color:var(--ink3);letter-spacing:0}
+.ja .sko{font-size:var(--fs-4);font-weight:400;line-height:1.5;color:var(--ink2);margin-top:2px}
+.ja.playing .sn{opacity:.38;transition:opacity .2s}.ja.playing .sn.cur{opacity:1}
+.ja.noro .w rt{visibility:hidden}
 .ja ruby{ruby-align:center}.ja rt{font-size:var(--fs-5);font-weight:400;color:var(--ink3);letter-spacing:-.08em}
 .ja.nofu rt{visibility:hidden}
 .ja rt{font-size:var(--fs-5)}
@@ -149,7 +160,7 @@ summary{font-weight:600;cursor:pointer;min-height:24px}
   <div class="row2"><button class="btn sm" id="less">한 단계 줄이기 ▸</button><button class="btn sm" id="more">◂ 다시 보이기</button></div>
   <div class="row2"><button class="btn sm" id="ok">입에 붙었어</button><button class="btn sm" id="again">다시 볼래</button></div>
   <details id="exd"><summary>이 문장 뜯어보기</summary><div class="ex"><span class="k2">낱말 · 누르면 담아 둬요(1·3·7일 뒤 이 문장부터)</span><div class="wd" id="w"></div><span class="k2">말의 틀</span><p id="pt"></p></div></details>
-  <p class="note">⟲는 다시 듣기만 해요. 글자는 위 칩이나 「한 단계 줄이기」로 내가 정해요. 로마자를 끄면 모르는 가나를 눌러 보세요. 노란 밑줄은 외래어(가타카나) 낱말이에요. 글자 불빛은 소리에 맞춘 어림값이에요.</p>
+  <p class="note">⟲는 다시 듣기만 해요. 글자는 위 칩이나 「한 단계 줄이기」로 내가 정해요. 로마자 칩으로 낱말 위 로마자를 한꺼번에 끄고 켜요. 끄면 모르는 낱말을 눌러 보세요. 들리는 문장만 진하게 보여요. 글자 불빛은 소리에 맞춘 어림값이에요.</p>
  </section>
 
  <!-- 3 장면 끝 -->
@@ -1157,10 +1168,57 @@ function kQuiz(c,ok){const k=KS[c]||{};KS[c]=Object.assign({},k,{s:ok?(k.s||0)+1
 function kWeekChars(){const g=KW%KG.length;const r=KG[g].replace(/[ゃゅょっぁぃぅぇぉゔがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ]/g,'');return KW>=KG.length?[...r].map(c=>String.fromCharCode(c.charCodeAt(0)+0x60)).join(''):r}
 const rtRom=u=>{const h=[...u].map(toH).join('');return h==='っ'?'·':h==='ー'?'—':romUnit(u)};
 /* 문장 → 가나 먼저 HTML: 한자는 읽기 가나로 바꿔 보여 줌 */
-function kanaHtml(s){const kana=s.replace(RX,'$2');let html='';
- for(const u of units([...kana])){if(isKana(u[0])){const stt=kState(u[0]);const r=rtRom(u);html+=`<ruby class="u k s-${stt}" data-w="1" data-r="${romUnit(u)}">${u}<rt>${stt==='known'?'':r}</rt></ruby>`}
-  else html+=(/[0-9A-Za-z]/.test(u)?`<span class="u" data-w="1">${u}</span>`:u)}
- return html}
+function kanaHtml(s){const kana=s.replace(RX,'$2');const tk=[];
+ for(const u of units([...kana])){if(isKana(u[0])){const stt=kState(u[0]);const r=rtRom(u);tk.push(`<ruby class="u k s-${stt}" data-w="1" data-r="${romUnit(u)}">${u}<rt>${stt==='known'?'':r}</rt></ruby>`)}
+  else if(/^[。、，．？！?!,.」』）)…ー]+$/.test(u)&&tk.length&&!/^\s+$/.test(tk[tk.length-1]))tk[tk.length-1]=`<span class="nb">${tk[tk.length-1]}${u}</span>`;
+  else if(/^\s+$/.test(u))tk.push('<br>');
+  else tk.push(/[0-9A-Za-z]/.test(u)?`<span class="u" data-w="1">${u}</span>`:u)}
+ return tk.join('<wbr>')}
+/* 2026-11-26: 낱말 띄어쓰기 + 낱말 위 로마자(Intl.Segmenter · 없으면 글자 단위) */
+const SEG=(()=>{try{return new Intl.Segmenter('ja',{granularity:'word'})}catch(e){return null}})();
+const PRT=new Set(['は','が','を','に','で','と','へ','も','の','か','よ','ね','な','わ','って','から','まで','より','や','さ','ぞ','ぜ','けど','し','ので','のに','だ','です','ます','た','て','でも','じゃ','かな','じゃん']);
+const PROM={'は':'wa','へ':'e','を':'o'};
+function wordsHtml(s){
+ const parts=[];let last=0,m;RX.lastIndex=0;
+ while((m=RX.exec(s))){if(m.index>last)parts.push({t:s.slice(last,m.index)});parts.push({b:m[1],r:m[2]});last=RX.lastIndex}
+ if(last<s.length)parts.push({t:s.slice(last)});
+ let plainS='';parts.forEach(p=>{p.st=plainS.length;plainS+=p.b||p.t;p.en=plainS.length});
+ if(!SEG)return kanaHtml(s);
+ const toks=[];
+ for(const g of SEG.segment(plainS)){const a=g.index,b=a+g.segment.length;let kana='';
+  for(const p of parts){if(p.en<=a||p.st>=b)continue;if(p.b){if(p.st>=a)kana+=p.r}else kana+=p.t.slice(Math.max(0,a-p.st),Math.min(p.t.length,b-p.st))}
+  const word=g.isWordLike||/[ぁ-ゖァ-ヶー0-9A-Za-z]/.test(kana);
+  if(!kana.trim())continue;
+  if(!word){if(toks.length)toks[toks.length-1].punct+=kana;else toks.push({kana:'',rom:'',punct:kana});continue}
+  const prev=toks[toks.length-1];
+  if(prev&&prev.kana&&!prev.punct&&PRT.has(kana)){prev.kana+=kana;prev.rom+=(PROM[kana]||romWord(kana));continue}
+  toks.push({kana,rom:romWord(kana),punct:''});}
+ return toks.map(t=>{if(!t.kana)return t.punct;
+  const base=[...t.kana].map(c=>kWeek(c)===KW?`<span class="s-target">${c}</span>`:c).join('');
+  const w=`<ruby class="u k w" data-w="${t.kana.length}" data-k="${t.kana}" data-r="${t.rom}">${base}<rt>${t.rom}</rt></ruby>`;
+  return t.punct?`<span class="nb">${w}${t.punct}</span>`:w}).join('<wbr>');
+}
+/* 로마자 줄의 띄어쓰기를 낱말 경계로 씀(글자 수 누적으로 맞춤) · 조사 は→wa 같은 표기도 로마자 줄 그대로 */
+function wordsByRo(s,ro){
+ const T=String(ro||'').split(/\s+/).map(t=>t.replace(/[^A-Za-z0-9]/g,'')).filter(Boolean);
+ if(!T.length)return null;
+ const us=units([...s.replace(RX,'$2')]);
+ const ln=u=>{const h=[...u].map(toH).join('');if(/^[。、，．？！?!,.」』）)…\s「『（(]+$/.test(u))return 0;if(h==='っ'||h==='ー')return 1;if(isKana(u[0]))return romUnit(u).length;return u.length};
+ const tot=us.reduce((a,u)=>a+ln(u),0),ttot=T.reduce((a,t)=>a+t.length,0);
+ if(!tot||Math.abs(tot-ttot)>Math.max(4,ttot*.35))return null;
+ const C=[];T.reduce((a,t)=>{a+=t.length;C.push(a*tot/ttot);return a},0);
+ const G=[];let k=0,c=0,need=true;
+ for(let j=0;j<us.length;j++){const u=us[j],l=ln(u);
+  if(!l&&!isKana(u[0])&&!/[0-9A-Za-z]/.test(u)){if(G.length)G[G.length-1].p+=u;continue}
+  if(need){G.push({k:'',p:'',r:T[Math.min(k,T.length-1)]});need=false}
+  G[G.length-1].k+=u;c+=l;
+  if(k<T.length-1&&c>=C[k]-0.01){let nx=0;for(let q=j+1;q<us.length;q++){nx=ln(us[q]);if(nx)break}
+   if(!(nx&&Math.abs(c+nx-C[k])<Math.abs(c-C[k]))){k++;need=true}}}
+ return G}
+function wordsHtmlRo(s,ro){const G=wordsByRo(s,ro);if(!G)return wordsHtml(s);
+ return G.map(g=>{if(!g.k)return g.p;const base=[...g.k].map(c=>kWeek(c)===KW?`<span class="s-target">${c}</span>`:c).join('');
+  const w=`<ruby class="u k w" data-w="${g.k.length}" data-k="${g.k}" data-r="${g.r}">${base}<rt>${g.r}</rt></ruby>`;
+  return g.p?`<span class="nb">${w}${g.p}</span>`:w}).join('<wbr>')}
 const HASH=decodeURIComponent((location.hash||'').slice(1));
 const APP='https://claude.ai/artifact/GzsiTVer3f5bMfRdraSETH';
 const VLIST=HASH.startsWith('V:')?HASH.slice(2):'';
@@ -1191,8 +1249,8 @@ if(LIST){renderList()}else{
 /* R67 2026-11-21: 문장 2~3개(약 10초)를 한 카드로 묶음 · 장면당 카드 3개 안팎 */
 function groupLines(src){const out=[];let g=null;
  for(const l of src){if(g&&(g.n>=3||l[1]-g.l[0]>12)){out.push(g.l);g=null}
-  if(!g){g={n:1,l:[l[0],l[1],l[2],l[3],l[4],[...l[5]],l[6]]};continue}
-  g.n++;const x=g.l;x[1]=l[1];x[2]+=' '+l[2];x[3]+=' '+l[3];x[4]+=' '+l[4];l[5].forEach(w=>{if(x[5].length<5&&!x[5].some(y=>y[0]===w[0]))x[5].push(w)});if(l[6]&&!x[6].includes(l[6]))x[6]+=' / '+l[6]}
+  if(!g){g={n:1,l:[l[0],l[1],l[2],l[3],l[4],[...l[5]],l[6],[[l[0],l[1],l[2],l[3],l[4]]]]};continue}
+  g.n++;const x=g.l;x[7].push([l[0],l[1],l[2],l[3],l[4]]);x[1]=l[1];x[2]+=' '+l[2];x[3]+=' '+l[3];x[4]+=' '+l[4];l[5].forEach(w=>{if(x[5].length<5&&!x[5].some(y=>y[0]===w[0]))x[5].push(w)});if(l[6]&&!x[6].includes(l[6]))x[6]+=' / '+l[6]}
  if(g)out.push(g.l);return out}
 const sceneId=HASH;const S=SCENES[sceneId]||SCENES[Object.keys(SCENES)[0]], L=groupLines(S.L);const vidId=S.v||sceneId;
 const KEY='jpscene2.'+sceneId, DAY=864e5, IV=[1,3,7,14,30];
@@ -1218,7 +1276,7 @@ let player=null,ready=false,endAt=null,onEnd=null,segA=0,segB=0,litOn=false;
 function seg(a,b,cb){if(!ready)return;segA=a;segB=b;endAt=b;onEnd=cb||null;player.seekTo(a,true);player.playVideo();}
 function stopSeg(){endAt=null;onEnd=null;litOn=false;clearLit();try{player.pauseVideo()}catch(e){}}
 setInterval(()=>{if(!ready||endAt===null||!player.getCurrentTime)return;const t=player.getCurrentTime();
- if(litOn)lit((t-segA)/(segB-segA));
+ if(litOn){lit((t-segA)/(segB-segA));const sn=[...document.querySelectorAll('#ja .sn')];let c=0;sn.forEach((e,i)=>{if(t>=+e.dataset.t0-0.2)c=i});$('ja').classList.add('playing');sn.forEach((e,i)=>e.classList.toggle('cur',i===c))}
  if(t>=endAt){player.pauseVideo();endAt=null;litOn=false;clearLit();const f=onEnd;onEnd=null;if(f)setTimeout(f,50)}},80);
 window.onYouTubeIframeAPIReady=()=>{player=new YT.Player('yt',{videoId:vidId,playerVars:{playsinline:1,rel:0,modestbranding:1,start:S.a,cc_load_policy:0},events:{onReady:()=>{ready=true;window.__ready=true},onError:()=>{$('err').style.display='block'}}})};
 const sc=document.createElement('script');sc.src='https://www.youtube.com/iframe_api';document.head.appendChild(sc);
@@ -1244,7 +1302,7 @@ let plays=0,auto=false,autoTok=0,preTimer=null;
 const ORDER=['ko','ro','fu','ja'];
 function setCover(on){$('cover').classList.toggle('on',on)}
 function applyHide(){const h=st.hide;
- $('ko').classList.toggle('mask',h.ko);$('ro').hidden=h.ro;
+ $('ko').hidden=true;$('ro').hidden=true;document.querySelectorAll('#ja .sko').forEach(e=>e.classList.toggle('mask',h.ko));$('ja').classList.toggle('noro',h.ro);
  $('orig').hidden=h.fu;$('ja').classList.toggle('hide',h.ja);$('ja').classList.toggle('tap',h.ro&&!h.ja);
  document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('off',h[c.dataset.h]));
  setCover(h.ja);
@@ -1253,7 +1311,7 @@ function applyHide(){const h=st.hide;
 function render(){const l=L[st.i];
  $('no').textContent=(st.i+1)+' / '+L.length;
  $('mark').textContent=st.m[st.i]==='ok'?'입에 붙음':st.m[st.i]==='again'?'다시 볼 말':'';
- $('ja').innerHTML=kanaHtml(l[2]);$('orig').innerHTML=rubyHtml(l[2]);$('wk').innerHTML=`이번 주 글자 <b>${kWeekChars()}</b> · 노란 글자만 로마자가 붙어요`;$('ro').textContent=l[3];$('ko').textContent=l[4];$('pre').textContent=auto?'지하철 자동 · 듣고 3초 따라 하고 한 번 더':'';
+ $('ja').innerHTML=(l[7]||[[l[0],l[1],l[2],l[3],l[4]]]).map(x=>`<div class="sn" data-t0="${x[0]}"><div class="jl">${wordsHtmlRo(x[2],x[3])}</div><div class="sko">${x[4]}</div></div>`).join('');$('orig').innerHTML=rubyHtml(l[2]);$('wk').innerHTML=`이번 주 글자 <b>${kWeekChars()}</b> · 노란 글자가 이번 주 글자예요`;$('ro').textContent=l[3];$('ko').textContent=l[4];$('pre').textContent=auto?'지하철 자동 · 듣고 3초 따라 하고 한 번 더':'';
  $('w').innerHTML=l[5].map(([w,m])=>`<button data-wd="${plain(w)}" class="${st.saved[plain(w)]?'on':''}"><span>${rubyHtml(w)}</span><em>${m}${st.saved[plain(w)]?' · 담음':''}</em></button>`).join('');
  $('pt').textContent=l[6];
  $('dots').innerHTML=L.map((_,k)=>`<i class="${k===st.i?'on':''} ${st.m[k]||''}"></i>`).join('');
@@ -1264,7 +1322,7 @@ function render(){const l=L[st.i];
 }
 /* 노래방 불빛 */
 function lit(p){const us=[...$('ja').querySelectorAll('.u')];if(!us.length)return;const tot=us.reduce((a,u)=>a+(+u.dataset.w||1),0);let acc=0;const lim=Math.max(0,Math.min(1,p))*tot;us.forEach(u=>{acc+=(+u.dataset.w||1);u.classList.toggle('lit',acc<=lim+0.5)})}
-function clearLit(){document.querySelectorAll('#ja .u.lit').forEach(u=>u.classList.remove('lit'))}
+function clearLit(){document.querySelectorAll('#ja .u.lit').forEach(u=>u.classList.remove('lit'));const j=$('ja');if(j){j.classList.remove('playing');j.querySelectorAll('.sn.cur').forEach(e=>e.classList.remove('cur'))}}
 function playLine(cb){const l=L[st.i];litOn=true;seg(Math.max(0,l[0]-0.15),l[1]+0.25,cb)}
 $('play').onclick=()=>{stopAuto();clearTimeout(preTimer);
  if(plays===0&&!st.hide.ja&&$('ja').querySelector('.s-target')){let n=3;$('pre').textContent=`노란 글자 먼저 읽어 봐요 · ${n}`;
@@ -1274,7 +1332,7 @@ let lineTaps=0;
 function leaveLine(){const i=st.i;if(!plays&&!lineTaps)return;const lv=ORDER.filter(x=>st.hide[x]).length;
  if(!auto){if(plays>=4||(lineTaps>=2&&lv<2))bump(i,-1);else if(lv>=2&&plays<=2)bump(i,1);}
  st.seen=Object.assign({},st.seen,{[i]:1});logEv('line',i,'plays',plays,`hide=${lv};taps=${lineTaps};str=${strOf(i)}`);lineTaps=0}
-function autoHide(){const s=strOf(st.i);st.hide={ko:s>=2,ro:true,fu:s>=3,ja:false}}
+function autoHide(){const s=strOf(st.i);st.hide={ko:s>=2,ro:s>=3,fu:s>=3,ja:false}}
 function go(k){stopSeg();clearTimeout(preTimer);leaveLine();flush();
  if(k>=L.length){toEnd();return}
  st.i=Math.max(0,k);plays=0;autoHide();
@@ -1295,7 +1353,7 @@ document.addEventListener('click',e=>{const m=e.target.closest('.mask');if(m){m.
 /* 가나 누르기 → 로마자 */
 let tipEl=null;
 $('ja').addEventListener('click',e=>{if(st.hide.ja)return;const kt=e.target.closest('.kt');const u=e.target.closest('.k');if(!u&&!kt)return;
- const target=kt||u;const r=target.dataset.r||u.dataset.r;const key=kt?kt.textContent:(u.firstChild.nodeValue||u.textContent);
+ const target=kt||u;const r=target.dataset.r||u.dataset.r;const key=kt?kt.textContent:(u.dataset.k||u.firstChild.nodeValue||u.textContent);
  lineTaps++;[...key].filter(c=>/[ぁ-ゖァ-ヶ]/.test(c)&&!'ゃゅょぁぃぅぇぉっャュョァィゥェォッ'.includes(c)).forEach(c=>{st.taps[c]=(st.taps[c]||0)+1;st.ks[c]=(st.ks[c]||0)-1});logEv('kana',st.i,key,r);save();kTap(key);
  const rc=target.getBoundingClientRect();if(tipEl)tipEl.remove();tipEl=document.createElement('div');tipEl.className='tip';tipEl.textContent=r;tipEl.style.left=(rc.left+rc.width/2)+'px';tipEl.style.top=rc.top+'px';document.body.appendChild(tipEl);const me=tipEl;setTimeout(()=>me.remove(),1400)});
 /* 카드 밀기 */
